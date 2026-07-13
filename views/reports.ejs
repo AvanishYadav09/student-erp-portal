@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Reports</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <div class="sidebar">
+
+            <h2>🎓 ERP</h2>
+
+            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+
+            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+
+            <a href="/attendance"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+
+            <a href="/marks"><i class="fa-solid fa-book"></i> Marks</a>
+
+            <a href="/reports" class="active"><i class="fa-solid fa-chart-column"></i> Reports</a>
+
+            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+        </div>
+
+        <div class="content">
+
+            <h1>📊 Attendance Report</h1>
+
+            <br>
+
+            <table class="report-table">
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Student</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+                <% reports.forEach(report=>{ %>
+
+                    <tr>
+
+                        <td>
+                            <%= report.date %>
+                        </td>
+
+                        <td>
+                            <%= report.name %>
+                        </td>
+
+                        <td>
+
+                            <% if(report.status=="Present" ){ %>
+
+                                <span class="present">
+
+                                    Present
+
+                                </span>
+
+                                <% } else { %>
+
+                                    <span class="absent">
+
+                                        Absent
+
+                                    </span>
+
+                                    <% } %>
+
+                        </td>
+
+                    </tr>
+
+                    <% }) %>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Attendance</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <h1>📅 Student Attendance Management</h1>
+
+    <label><b>Select Date</b></label>
+    <input type="date" name="date">
+
+    <br><br>
+
+    <table class="attendance-table">
+
+        <tr>
+            <th>Student Name</th>
+            <th>Present</th>
+            <th>Absent</th>
+        </tr>
+
+        <% students.forEach(student=>{ %>
+
+            <tr>
+
+                <td>
+                    <%= student.name %>
+                </td>
+
+                <td>
+                    <input type="radio" name="status[<%= student.id %>]" value="Present" required>
+                </td>
+
+                <td>
+                    <input type="radio" name="status[<%= student.id %>]" value="Absent">
+                </td>
+
+            </tr>
+
+            <% }) %>
+
+    </table>
+
+    <br>
+
+    <button class="save-btn">
+        Save Attendance
+    </button>

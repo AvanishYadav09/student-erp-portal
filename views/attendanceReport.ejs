@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Attendance Report</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <h1>Attendance Report</h1>
+
+        <table class="attendance-table">
+
+            <tr>
+
+                <th>Date</th>
+
+                <th>Student</th>
+
+                <th>Status</th>
+
+            </tr>
+
+            <% attendance.forEach(a=>{ %>
+
+                <tr>
+
+                    <td>
+                        <%= a.date %>
+                    </td>
+
+                    <td>
+                        <%= a.name %>
+                    </td>
+
+                    <td>
+
+                        <%= a.status %>
+
+                    </td>
+
+                </tr>
+
+                <% }) %>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

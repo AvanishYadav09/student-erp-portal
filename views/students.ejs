@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Attendance</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <div class="sidebar">
+
+            <h2>🎓 ERP</h2>
+
+            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+
+            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+
+            <a href="/attendance" class="active"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+
+            <a href="/marks"><i class="fa-solid fa-book"></i> Marks</a>
+
+            <a href="/reports"><i class="fa-solid fa-chart-column"></i> Reports</a>
+
+            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+        </div>
+
+        <div class="content">
+
+            <h1>📅 Student Attendance</h1>
+
+            <br>
+
+            <form action="/attendance/save" method="POST">
+
+                <label><b>Select Date</b></label>
+
+                <input type="date" name="date" required>
+
+                <br><br>
+
+                <table class="report-table">
+
+                    <tr>
+
+                        <th>Student Name</th>
+
+                        <th>Present</th>
+
+                        <th>Absent</th>
+
+                    </tr>
+
+                    <% students.forEach(student=>{ %>
+
+                        <tr>
+
+                            <td>
+                                <%= student.name %>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <input type="radio" name="status[<%= student.id %>]" value="Present" required>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <input type="radio" name="status[<%= student.id %>]" value="Absent">
+                            </td>
+
+                        </tr>
+
+                        <% }) %>
+
+                </table>
+
+                <br>
+
+                <button type="submit">
+
+                    💾 Save Attendance
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

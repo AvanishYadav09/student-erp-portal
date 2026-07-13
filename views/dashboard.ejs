@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <div class="sidebar">
+
+            <h2>🎓 ERP</h2>
+
+            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+
+            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+
+            <a href="/attendance"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+
+            <a href="/marks"><i class="fa-solid fa-book"></i> Marks</a>
+
+            <a href="/reports"><i class="fa-solid fa-chart-column"></i> Reports</a>
+
+            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+        </div>
+
+
+        <div class="content">
+
+            <div class="topbar">
+
+                <h1>Dashboard</h1>
+
+                <div class="admin">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    Admin
+
+                </div>
+
+            </div>
+
+
+            <div class="cards">
+
+                <div class="card blue">
+
+                    <h2>
+                        <%= totalStudents %>
+                    </h2>
+
+                    <p>Total Students</p>
+
+                </div>
+
+                <div class="card green">
+
+                    <h2>
+                        <%= presentToday %>
+                    </h2>
+
+                    <p>Present Today</p>
+
+                </div>
+
+                <div class="card red">
+
+                    <h2>
+                        <%= absentToday %>
+                    </h2>
+
+                    <p>Absent Today</p>
+
+                </div>
+
+                <div class="card purple">
+
+                    <h2>
+                        <%= averageMarks %>%
+                    </h2>
+
+                    <p>Average Marks</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="welcome">
+
+                <h2>Welcome to Student ERP Portal 👋</h2>
+
+                <p>
+
+                    Manage students, attendance, marks and reports from one dashboard.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

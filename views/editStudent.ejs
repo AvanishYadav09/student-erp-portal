@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Student</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <h1>Edit Student</h1>
+
+        <form action="/students/update/<%= student.id %>" method="POST">
+
+            <input type="text" name="name" value="<%= student.name %>" required>
+
+            <input type="text" name="roll" value="<%= student.roll %>" required>
+
+            <input type="text" name="branch" value="<%= student.branch %>" required>
+
+            <input type="text" name="semester" value="<%= student.semester %>" required>
+
+            <input type="text" name="phone" value="<%= student.phone %>" required>
+
+            <button>
+                Update Student
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
