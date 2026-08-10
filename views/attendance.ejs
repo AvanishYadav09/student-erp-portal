@@ -1,51 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Attendance</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mark Attendance - ERP Portal</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
-    <h1>📅 Student Attendance Management</h1>
+    <div class="dashboard">
 
-    <label><b>Select Date</b></label>
-    <input type="date" name="date">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>🎓 ERP Portal</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/students">👨‍🎓 Students</a></li>
+                <li class="active"><a href="/attendance">📅 Attendance</a></li>
+                <li><a href="/marks">📝 Marks</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
 
-    <br><br>
+        <!-- Main Content -->
+        <main class="main">
 
-    <table class="attendance-table">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="header-left">
+                    <h1>Attendance Marking</h1>
+                    <p>Mark daily class attendance for all enrolled students</p>
+                </div>
 
-        <tr>
-            <th>Student Name</th>
-            <th>Present</th>
-            <th>Absent</th>
-        </tr>
+                <div class="header-right">
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
 
-        <% students.forEach(student=>{ %>
+                    <div class="profile">
+                        <div class="avatar">
+                            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                        <div>
+                            <h4><%= (locals.user && locals.user.name) ? locals.user.name : 'User' %></h4>
+                            <small><%= (locals.user && locals.user.role === 'admin') ? 'Administrator' : 'Student (' + (locals.user && locals.user.roll ? locals.user.roll : '') + ')' %></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <tr>
+            <!-- Attendance Marking Form Glass Card -->
+            <div class="glass-card">
+                <form action="/attendance/save" method="POST">
+                    <div class="glass-card-header">
+                        <h3><i class="fas fa-calendar-check" style="color: #6c63ff;"></i> Daily Attendance Register</h3>
+                        <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                            <label><i class="fas fa-calendar-day"></i> Select Date:</label>
+                            <input type="date" name="date" class="glass-input" style="width: auto;" required value="<%= new Date().toISOString().split('T')[0] %>">
+                        </div>
+                    </div>
 
-                <td>
-                    <%= student.name %>
-                </td>
+                    <div class="table-container" style="margin-bottom: 25px;">
+                        <table class="glass-table">
+                            <thead>
+                                <tr>
+                                    <th># ID</th>
+                                    <th>Student Name</th>
+                                    <th>Branch / Roll</th>
+                                    <th style="text-align: center;">Mark Attendance Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (students && students.length) { %>
+                                    <% students.forEach(student => { %>
+                                        <tr>
+                                            <td style="color: #6c63ff; font-weight: bold;">#<%= student.id %></td>
+                                            <td>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <div class="avatar" style="width: 32px; height: 32px; font-size: 13px;">
+                                                        <%= student.name ? student.name.charAt(0).toUpperCase() : 'S' %>
+                                                    </div>
+                                                    <b style="color: #fff;"><%= student.name %></b>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="pill-badge pill-branch"><%= student.branch %></span>
+                                                <small style="color: #9aa4c5; margin-left: 6px;"><%= student.roll %></small>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div class="radio-toggle" style="justify-content: center;">
+                                                    <label style="background: rgba(0, 230, 118, .1); border-color: rgba(0, 230, 118, .3); color: #00e676;">
+                                                        <input type="radio" name="status[<%= student.id %>]" value="Present" required checked>
+                                                        <i class="fas fa-check"></i> Present
+                                                    </label>
+                                                    <label style="background: rgba(255, 82, 82, .1); border-color: rgba(255, 82, 82, .3); color: #ff5252;">
+                                                        <input type="radio" name="status[<%= student.id %>]" value="Absent">
+                                                        <i class="fas fa-times"></i> Absent
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                            <i class="fas fa-user-slash" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
+                                            No students found in system. Please add students first.
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <td>
-                    <input type="radio" name="status[<%= student.id %>]" value="Present" required>
-                </td>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <% if (locals.user && locals.user.role === 'admin') { %>
+                            <button type="submit" class="btn-glow btn-success-glow" style="padding: 14px 30px; font-size: 16px;">
+                                <i class="fas fa-save"></i> Save Attendance Register
+                            </button>
+                        <% } else { %>
+                            <div class="pill-badge pill-branch" style="padding: 10px 20px;">
+                                <i class="fas fa-lock"></i> Read-Only Attendance Register (Admin Access Required To Modify)
+                            </div>
+                        <% } %>
+                    </div>
+                </form>
+            </div>
 
-                <td>
-                    <input type="radio" name="status[<%= student.id %>]" value="Absent">
-                </td>
+        </main>
+    </div>
+</body>
 
-            </tr>
-
-            <% }) %>
-
-    </table>
-
-    <br>
-
-    <button class="save-btn">
-        Save Attendance
-    </button>
+</html>

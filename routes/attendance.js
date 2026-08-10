@@ -1,65 +1,52 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database/db");
+const { requireAuth, requireAdmin } = require("../middleware/auth");
 
 // Show Attendance Page
-router.get("/attendance", (req, res) => {
-
-    db.all("SELECT * FROM students", [], (err, rows) => {
-
-        if (err) console.log(err);
-
-        res.render("attendance", {
-            students: rows
-        });
-
-    });
-
-});
-
-// Save Attendance
-router.post("/attendance/save", (req, res) => {
-    const date = req.body.date;
-    const status = req.body.status;
-
-    for (let studentId in status) {
-        db.run(
-            "INSERT INTO attendance (student_id, date, status) VALUES (?, ?, ?)",
-            [studentId, date, status[studentId]]
-        );
+router.get("/attendance", requireAuth, async (req, res) => {
+    try {
+        const rows = await db.allAsync("SELECT * FROM students");
+        res.render("attendance", { user: req.session.user, students: rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
     }
-
-    res.redirect("/reports");
 });
 
+// Save Attendance (Admin Only)
+router.post("/attendance/save", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const date = req.body.date;
+        const status = req.body.status || {};
 
-router.get("/attendance/report", (req, res) => {
+        for (let studentId in status) {
+            await db.runAsync(
+                "INSERT INTO attendance (student_id, date, status) VALUES (?, ?, ?)",
+                [studentId, date, status[studentId]]
+            );
+        }
 
-    db.all(`
+        res.redirect("/reports");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
 
-SELECT
-attendance.date,
-students.name,
-attendance.status
-
-FROM attendance
-
-JOIN students
-
-ON attendance.student_id=students.id
-
-ORDER BY attendance.date DESC
-
-`, [], (err, rows) => {
-
-        res.render("attendanceReport", {
-
-            attendance: rows
-
-        });
-
-    });
-
+router.get("/attendance/report", requireAuth, async (req, res) => {
+    try {
+        const rows = await db.allAsync(`
+            SELECT attendance.date, students.name, attendance.status
+            FROM attendance
+            JOIN students ON attendance.student_id = students.id
+            ORDER BY attendance.date DESC
+        `);
+        res.render("attendanceReport", { user: req.session.user, attendance: rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
 });
 
 module.exports = router;

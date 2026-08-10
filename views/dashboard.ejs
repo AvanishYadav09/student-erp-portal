@@ -8,112 +8,257 @@
 
     <title>Dashboard</title>
 
-    <link rel="stylesheet" href="/css/style.css">
-
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
 
     <div class="dashboard">
 
-        <div class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
 
-            <h2>🎓 ERP</h2>
+            <div class="logo">
+                <h2>🎓 ERP Portal</h2>
+            </div>
 
-            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <ul class="menu">
+                <li class="active"><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/students">👨‍🎓 Students</a></li>
+                <li><a href="/attendance">📅 Attendance</a></li>
+                <li><a href="/marks">📝 Marks</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
 
-            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+        </aside>
 
-            <a href="/attendance"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+        <!-- Main Content -->
+        <main class="main">
 
-            <a href="/marks"><i class="fa-solid fa-book"></i> Marks</a>
-
-            <a href="/reports"><i class="fa-solid fa-chart-column"></i> Reports</a>
-
-            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-
-        </div>
-
-
-        <div class="content">
-
+            <!-- Top Bar -->
             <div class="topbar">
 
-                <h1>Dashboard</h1>
+                <div class="header-left">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %> 👋</p>
+                </div>
 
-                <div class="admin">
+                <div class="header-right">
 
-                    <i class="fa-solid fa-user"></i>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search portal...">
+                    </div>
 
-                    Admin
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+
+                    <div class="profile">
+                        <div class="avatar">
+                            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                        <div>
+                            <h4>
+                                <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %>
+                            </h4>
+                            <small>
+                                <%= (locals.user && locals.user.role==='admin' ) ? 'Administrator' : 'Student (' +
+                                    (locals.user && locals.user.roll ? locals.user.roll : '' ) + ')' %>
+                            </small>
+                        </div>
+                    </div>
 
                 </div>
 
             </div>
 
-
+            <!-- Cards -->
             <div class="cards">
-
-                <div class="card blue">
-
-                    <h2>
-                        <%= totalStudents %>
-                    </h2>
-
-                    <p>Total Students</p>
-
-                </div>
-
-                <div class="card green">
-
-                    <h2>
-                        <%= presentToday %>
-                    </h2>
-
-                    <p>Present Today</p>
-
-                </div>
-
-                <div class="card red">
-
-                    <h2>
-                        <%= absentToday %>
-                    </h2>
-
-                    <p>Absent Today</p>
-
-                </div>
-
-                <div class="card purple">
-
-                    <h2>
-                        <%= averageMarks %>%
-                    </h2>
-
-                    <p>Average Marks</p>
-
-                </div>
-
+                <% if (locals.user && locals.user.role==='student' ) { %>
+                    <div class="card purple">
+                        <h2>
+                            <%= locals.user.roll %>
+                        </h2>
+                        <p>Roll Number</p>
+                    </div>
+                    <div class="card green">
+                        <h2>
+                            <%= presentToday %> Days
+                        </h2>
+                        <p>My Days Present</p>
+                    </div>
+                    <div class="card red">
+                        <h2>
+                            <%= absentToday %> Days
+                        </h2>
+                        <p>My Days Absent</p>
+                    </div>
+                    <div class="card pink">
+                        <h2>
+                            <%= averageMarks %>%
+                        </h2>
+                        <p>My Academic Score</p>
+                    </div>
+                    <% } else { %>
+                        <div class="card purple">
+                            <h2>
+                                <%= totalStudents %>
+                            </h2>
+                            <p>Total Students</p>
+                        </div>
+                        <div class="card green">
+                            <h2>
+                                <%= presentToday %>
+                            </h2>
+                            <p>Present Today</p>
+                        </div>
+                        <div class="card red">
+                            <h2>
+                                <%= absentToday %>
+                            </h2>
+                            <p>Absent Today</p>
+                        </div>
+                        <div class="card pink">
+                            <h2>
+                                <%= averageMarks %>%
+                            </h2>
+                            <p>Average Marks</p>
+                        </div>
+                        <% } %>
             </div>
 
-
+            <!-- Welcome -->
             <div class="welcome">
-
-                <h2>Welcome to Student ERP Portal 👋</h2>
-
+                <h2>Welcome to Student ERP Portal 🚀</h2>
                 <p>
-
-                    Manage students, attendance, marks and reports from one dashboard.
-
+                    <% if (locals.user && locals.user.role==='student' ) { %>
+                        View your personal attendance logs, subject scores, and academic status in read-only mode.
+                        <% } else { %>
+                            Manage students, attendance, marks and reports from one unified dashboard.
+                            <% } %>
                 </p>
-
             </div>
 
-        </div>
+            <!-- Attendance Graph -->
+            <div class="graph-box">
+
+                <h2>Attendance Overview</h2>
+
+                <canvas id="attendanceChart"></canvas>
+
+            </div>
+            <div class="analytics">
+
+                <div class="performance-card">
+
+                    <h2>📊 Monthly Performance</h2>
+
+                    <canvas id="performanceChart"></canvas>
+
+                </div>
+
+                <div class="progress-card">
+
+                    <h2>Attendance</h2>
+
+                    <div class="circle">
+
+                        <div class="inner">
+                            87%
+                        </div>
+
+                    </div>
+
+                    <p>Overall Attendance</p>
+
+                </div>
+
+            </div>
+            <div class="bottom-section">
+
+                <div class="activity-card">
+
+                    <h2>Recent Activities</h2>
+
+                    <div class="activity">
+                        <span>👨‍🎓 New student added</span>
+                        <small>2 min ago</small>
+                    </div>
+                    <div class="quick-actions">
+
+                        <div class="action-card">
+                            <div class="icon">👨‍🎓</div>
+                            <h3>Add Student</h3>
+                            <a href="/students">Open</a>
+                        </div>
+
+                        <div class="action-card">
+                            <div class="icon">📅</div>
+                            <h3>Attendance</h3>
+                            <a href="/attendance">Open</a>
+                        </div>
+
+                        <div class="action-card">
+                            <div class="icon">📝</div>
+                            <h3>Marks</h3>
+                            <a href="/marks">Open</a>
+                        </div>
+
+                        <div class="action-card">
+                            <div class="icon">📊</div>
+                            <h3>Reports</h3>
+                            <a href="/reports">Open</a>
+                        </div>
+
+                    </div>
+
+                    <div class="activity">
+                        <span>✅ Attendance Updated</span>
+                        <small>15 min ago</small>
+                    </div>
+
+                    <div class="activity">
+                        <span>📝 Marks Uploaded</span>
+                        <small>1 hour ago</small>
+                    </div>
+
+                    <div class="activity">
+                        <span>📊 Report Generated</span>
+                        <small>Today</small>
+                    </div>
+
+                </div>
+
+                <div class="top-card">
+
+                    <h2>🏆 Top Performers</h2>
+
+                    <% if (topStudents && topStudents.length) { %>
+                        <% topStudents.forEach(student=> { %>
+                            <div class="student">
+                                <span>🏅 <%= student.name %></span>
+                                <b>
+                                    <%= student.total %>%
+                                </b>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <p>No top students found.</p>
+                                    <% } %>
+                </div>
+
+            </div>
+        </main>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/css/js/chart.js"></script>
 
 </body>
 

@@ -1,123 +1,81 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database/db");
+const { requireAuth, requireAdmin } = require("../middleware/auth");
 
 // Show Students Page
-router.get("/students", (req, res) => {
+router.get("/students", requireAuth, async (req, res) => {
+    try {
+        const search = req.query.search;
+        let sql = "SELECT * FROM students";
+        let params = [];
 
-    const search = req.query.search;
+        if (search) {
+            sql = "SELECT * FROM students WHERE name LIKE ?";
+            params = ['%' + search + '%'];
+        }
 
-    let sql = "SELECT * FROM students";
-    let params = [];
-
-    if (search) {
-        sql = "SELECT * FROM students WHERE name LIKE ?";
-        params = ['%' + search + '%'];
+        const rows = await db.allAsync(sql, params);
+        res.render("students", { user: req.session.user, students: rows, search });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
     }
-
-    db.all(sql, params, (err, rows) => {
-
-        if (err) {
-            console.log(err);
-        }
-
-        res.render("students", {
-            students: rows
-        });
-
-    });
-
 });
-// Add Student
-router.post("/students/add", (req, res) => {
 
-    const { name, roll, branch, semester, phone } = req.body;
-
-    db.run(
-
-        `INSERT INTO students(name,roll,branch,semester,phone)
-         VALUES(?,?,?,?,?)`,
-
-        [name, roll, branch, semester, phone],
-
-        (err) => {
-
-            if (err) {
-                console.log(err);
-            }
-
-            res.redirect("/students");
-
-        }
-
-    );
-
-});
-// Update Student
-router.post("/students/update/:id", (req, res) => {
-
-    const id = req.params.id;
-
-    const { name, roll, branch, semester, phone } = req.body;
-
-    db.run(
-
-        `UPDATE students
-        SET
-        name=?,
-        roll=?,
-        branch=?,
-        semester=?,
-        phone=?
-        WHERE id=?`,
-
-        [name, roll, branch, semester, phone, id],
-
-        (err) => {
-
-            if (err)
-                console.log(err);
-
-            res.redirect("/students");
-
-        }
-
-    );
-
-});
-// Delete Student
-router.get("/students/delete/:id", (req, res) => {
-
-    const id = req.params.id;
-
-    db.run("DELETE FROM students WHERE id = ?", [id], (err) => {
-
-        if (err) {
-            console.log(err);
-        }
-
+// Add Student (Admin Only)
+router.post("/students/add", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const { name, roll, branch, semester, phone } = req.body;
+        await db.runAsync(
+            `INSERT INTO students(name,roll,branch,semester,phone,password) VALUES(?,?,?,?,?,'student123')`,
+            [name, roll, branch, semester, phone]
+        );
         res.redirect("/students");
-
-    });
-
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
 });
-// Show Edit Form
-router.get("/students/edit/:id", (req, res) => {
 
-    const id = req.params.id;
+// Update Student (Admin Only)
+router.post("/students/update/:id", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { name, roll, branch, semester, phone } = req.body;
+        await db.runAsync(
+            `UPDATE students SET name=?, roll=?, branch=?, semester=?, phone=? WHERE id=?`,
+            [name, roll, branch, semester, phone, id]
+        );
+        res.redirect("/students");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
 
-    db.get("SELECT * FROM students WHERE id = ?", [id], (err, row) => {
+// Delete Student (Admin Only)
+router.get("/students/delete/:id", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await db.runAsync("DELETE FROM students WHERE id = ?", [id]);
+        res.redirect("/students");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
 
-        if (err) {
-            console.log(err);
-        }
-
-        res.render("editStudent", {
-            student: row
-        });
-
-    });
-
+// Show Edit Form (Admin Only)
+router.get("/students/edit/:id", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const row = await db.getAsync("SELECT * FROM students WHERE id = ?", [id]);
+        res.render("editStudent", { user: req.session.user, student: row });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
 });
 
 module.exports = router;

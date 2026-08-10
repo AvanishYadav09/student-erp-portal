@@ -4,56 +4,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student ERP Portal</title>
-
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- Font Awesome -->
+    <title>ERP Portal Authentication</title>
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .role-switcher {
+            display: flex;
+            background: rgba(13, 22, 41, 0.8);
+            padding: 4px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #9aa4c5;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .role-btn.active {
+            background: linear-gradient(135deg, #6c63ff, #8b5cf6);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.35);
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="login-container">
+    <!-- Animated Glow Background Orbs -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+    <div class="bg-glow-3"></div>
+    <div class="grid-overlay"></div>
 
-        <div class="login-card">
+    <div class="login-wrapper">
+        <div class="glass-login-card">
 
-            <div class="logo">🎓</div>
+            <!-- Brand Header -->
+            <div class="login-brand">
+                <div class="brand-icon-wrapper">
+                    🎓
+                </div>
+                <h1>Student ERP</h1>
+                <p id="subheading"><i class="fas fa-shield-alt" style="color: #6c63ff;"></i> Secure Administrator Portal</p>
+            </div>
 
-            <h1>Student ERP</h1>
+            <!-- Role Selector Tabs -->
+            <div class="role-switcher">
+                <button type="button" class="role-btn active" id="btnAdmin" onclick="setRole('admin')">
+                    <i class="fas fa-user-shield"></i> Admin Login
+                </button>
+                <button type="button" class="role-btn" id="btnStudent" onclick="setRole('student')">
+                    <i class="fas fa-user-graduate"></i> Student Login
+                </button>
+            </div>
 
-            <p>Admin Login</p>
-
+            <!-- Login Form -->
             <form action="/login" method="POST">
+                <input type="hidden" name="role" id="roleInput" value="admin">
 
-                <div class="input-box">
-
-                    <input type="text" name="username" placeholder="Username" required>
-
+                <!-- Identifier Input -->
+                <div class="input-group">
+                    <label for="identifier" id="identifierLabel">Administrator Username</label>
+                    <div class="input-field-wrapper">
+                        <i class="fas fa-user lead-icon" id="identifierIcon"></i>
+                        <input type="text" id="identifier" name="identifier" class="glass-input" placeholder="Enter your username" required autofocus autocomplete="off">
+                    </div>
                 </div>
 
-                <div class="input-box">
-
-                    <input type="password" name="password" placeholder="Password" required>
-
+                <!-- Password Input -->
+                <div class="input-group">
+                    <label for="password">Security Password</label>
+                    <div class="input-field-wrapper">
+                        <i class="fas fa-lock lead-icon"></i>
+                        <input type="password" id="password" name="password" class="glass-input" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-icon" id="togglePassword" title="Toggle Password Visibility"></i>
+                    </div>
                 </div>
 
-                <button type="submit">
+                <!-- Helpers -->
+                <div class="form-helpers">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" checked>
+                        <span>Remember session</span>
+                    </label>
+                    <span class="hint-badge"><i class="fas fa-lock"></i> Protected</span>
+                </div>
 
-                    Login
-
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login-submit" id="btnSubmit">
+                    <span>Sign In to Admin Portal</span>
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
-            </form>
+                <!-- Demo Credentials Info -->
+                <div class="demo-credentials-badge" id="demoBadge">
+                    <i class="fas fa-info-circle" style="color: #6c63ff; margin-right: 4px;"></i>
+                    <b>Admin Demo:</b> User: <code>admin</code> | Pass: <code>admin123</code><br>
+                    <small style="color: #64748b;">(Click Student Login tab for student account credentials)</small>
+                </div>
 
+            </form>
         </div>
 
+        <div class="login-footer">
+            &copy; 2026 Student ERP System &bull; All Rights Reserved
+        </div>
     </div>
 
+    <!-- Interactive Role & Password Script -->
+    <script>
+        function setRole(role) {
+            document.getElementById('roleInput').value = role;
+            const btnAdmin = document.getElementById('btnAdmin');
+            const btnStudent = document.getElementById('btnStudent');
+            const identifierLabel = document.getElementById('identifierLabel');
+            const identifierInput = document.getElementById('identifier');
+            const identifierIcon = document.getElementById('identifierIcon');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const subheading = document.getElementById('subheading');
+            const demoBadge = document.getElementById('demoBadge');
+
+            if (role === 'admin') {
+                btnAdmin.classList.add('active');
+                btnStudent.classList.remove('active');
+                identifierLabel.innerText = "Administrator Username";
+                identifierInput.placeholder = "Enter admin username (e.g. admin)";
+                identifierIcon.className = "fas fa-user-shield lead-icon";
+                btnSubmit.querySelector('span').innerText = "Sign In to Admin Portal";
+                subheading.innerHTML = '<i class="fas fa-shield-alt" style="color: #6c63ff;"></i> Secure Administrator Portal';
+                demoBadge.innerHTML = '<i class="fas fa-key" style="color: #6c63ff; margin-right: 4px;"></i> <b>Admin Access:</b> Username: <code>admin</code> | Password: <code>admin123</code>';
+            } else {
+                btnStudent.classList.add('active');
+                btnAdmin.classList.remove('active');
+                identifierLabel.innerText = "Student Roll Number / Username";
+                identifierInput.placeholder = "Enter 'student' or roll number (e.g. CS-101)";
+                identifierIcon.className = "fas fa-id-card lead-icon";
+                btnSubmit.querySelector('span').innerText = "Sign In to Student Portal";
+                subheading.innerHTML = '<i class="fas fa-user-graduate" style="color: #00e5ff;"></i> Read-Only Student Portal';
+                demoBadge.innerHTML = '<i class="fas fa-graduation-cap" style="color: #00e5ff; margin-right: 4px;"></i> <b>Student Access:</b> ID: <code>student</code> | Password: <code>123</code> (or Roll: <code>CS-101</code>)';
+            }
+        }
+
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 
 </html>

@@ -2,130 +2,181 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Marks</title>
-
-    <link rel="stylesheet" href="/css/style.css">
-
+    <title>Marks & Performance - ERP Portal</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 </head>
 
 <body>
-
     <div class="dashboard">
 
-        <div class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>🎓 ERP Portal</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/students">👨‍🎓 Students</a></li>
+                <li><a href="/attendance">📅 Attendance</a></li>
+                <li class="active"><a href="/marks">📝 Marks</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
 
-            <h2>🎓 ERP</h2>
+        <!-- Main Content -->
+        <main class="main">
 
-            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="header-left">
+                    <h1>Student Marks & Performance</h1>
+                    <p>Enter total scores and track academic grading performance</p>
+                </div>
 
-            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <div class="header-right">
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
 
-            <a href="/attendance"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+                    <div class="profile">
+                        <div class="avatar">
+                            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                        <div>
+                            <h4><%= (locals.user && locals.user.name) ? locals.user.name : 'User' %></h4>
+                            <small><%= (locals.user && locals.user.role === 'admin') ? 'Administrator' : 'Student (' + (locals.user && locals.user.roll ? locals.user.roll : '') + ')' %></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <a href="/marks" class="active"><i class="fa-solid fa-book"></i> Marks</a>
+            <!-- Stats Overview Cards -->
+            <div class="cards">
+                <div class="card purple">
+                    <h2><%= marks ? marks.length : 0 %></h2>
+                    <p>Total Marks Entries</p>
+                </div>
+                <div class="card green">
+                    <h2><%= marks && marks.length ? Math.round(marks.reduce((acc, m) => acc + (m.total || 0), 0) / marks.length) : 0 %>%</h2>
+                    <p>Class Average Score</p>
+                </div>
+                <div class="card red">
+                    <h2><%= marks ? marks.filter(m => m.total >= 75).length : 0 %></h2>
+                    <p>High Achievers (≥75%)</p>
+                </div>
+                <div class="card pink">
+                    <h2>A+</h2>
+                    <p>Top Performer Grade</p>
+                </div>
+            </div>
 
-            <a href="/reports"><i class="fa-solid fa-chart-column"></i> Reports</a>
+            <% if (locals.user && locals.user.role === 'admin') { %>
+            <!-- Add Marks Card (Admin Only) -->
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <h3><i class="fas fa-plus-circle" style="color: #6c63ff;"></i> Assign Marks</h3>
+                    <span style="color: #9aa4c5; font-size: 13px;">Select student and enter score</span>
+                </div>
 
-            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                <form action="/marks/add" method="POST">
+                    <div class="glass-form-grid">
+                        <div class="form-group" style="flex: 2;">
+                            <label><i class="fas fa-user-graduate"></i> Select Student</label>
+                            <select name="student_id" class="glass-select" required>
+                                <% if (students && students.length) { %>
+                                    <% students.forEach(student => { %>
+                                        <option value="<%= student.id %>"><%= student.name %> (<%= student.branch %> - <%= student.roll %>)</option>
+                                    <% }) %>
+                                <% } else { %>
+                                    <option value="">No students available</option>
+                                <% } %>
+                            </select>
+                        </div>
 
-        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label><i class="fas fa-star"></i> Total Score (%)</label>
+                            <input type="number" name="total" min="0" max="100" class="glass-input" placeholder="e.g. 85" required>
+                        </div>
 
-        <div class="content">
+                        <div>
+                            <button type="submit" class="btn-glow btn-primary-glow" style="width: 100%;">
+                                <i class="fas fa-save"></i> Save Score
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <% } %>
 
-            <h1>📝 Student Marks</h1>
+            <!-- Marks Directory Table Card -->
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <h3><i class="fas fa-award" style="color: #00e676;"></i> Marks & Performance Registry</h3>
+                </div>
 
-            <br>
-
-            <form action="/marks/add" method="POST" class="marks-form">
-
-                <select name="student_id" required>
-
-                    <% students.forEach(student=>{ %>
-
-                        <option value="<%= student.id %>">
-
-                            <%= student.name %>
-
-                        </option>
-
-                        <% }) %>
-
-                </select>
-
-                <input type="number" name="total" placeholder="Enter Marks" required>
-
-                <button type="submit">
-
-                    Save Marks
-
-                </button>
-
-            </form>
-
-            <br>
-
-            <table class="report-table">
-
-                <tr>
-
-                    <th>Student</th>
-
-                    <th>Marks</th>
-
-                    <th>Grade</th>
-
-                </tr>
-
-                <% marks.forEach(mark=>{ %>
-
-                    <tr>
-
-                        <td>
-                            <%= mark.name %>
-                        </td>
-
-                        <td>
-                            <%= mark.total %>
-                        </td>
-
-                        <td>
-
-                            <% if(mark.total>=90){ %>
-
-                                <span class="present">A+</span>
-
-                                <% }else if(mark.total>=75){ %>
-
-                                    <span class="present">A</span>
-
-                                    <% }else if(mark.total>=60){ %>
-
-                                        <span class="absent" style="background:orange;">B</span>
-
-                                        <% }else{ %>
-
-                                            <span class="absent">C</span>
-
+                <div class="table-container">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Total Score</th>
+                                <th>Performance Indicator</th>
+                                <th>Academic Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (marks && marks.length) { %>
+                                <% marks.forEach(mark => { %>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div class="avatar" style="width: 32px; height: 32px; font-size: 13px;">
+                                                    <%= mark.name ? mark.name.charAt(0).toUpperCase() : 'S' %>
+                                                </div>
+                                                <b style="color: #fff;"><%= mark.name %></b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <b style="color: #6c63ff; font-size: 16px;"><%= mark.total %>%</b>
+                                        </td>
+                                        <td>
+                                            <div style="width: 140px; background: #131d36; height: 10px; border-radius: 6px; overflow: hidden;">
+                                                <div style="width: <%= Math.min(mark.total, 100) %>%; height: 100%; background: <%= mark.total >= 75 ? '#00e676' : (mark.total >= 60 ? '#f9a826' : '#ff5252') %>;"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <% if (mark.total >= 90) { %>
+                                                <span class="pill-badge pill-grade-aplus"><i class="fas fa-crown"></i> A+ (Excellent)</span>
+                                            <% } else if (mark.total >= 75) { %>
+                                                <span class="pill-badge pill-grade-a"><i class="fas fa-star"></i> A (Very Good)</span>
+                                            <% } else if (mark.total >= 60) { %>
+                                                <span class="pill-badge pill-grade-b"><i class="fas fa-check"></i> B (Good)</span>
+                                            <% } else { %>
+                                                <span class="pill-badge pill-grade-c"><i class="fas fa-exclamation-circle"></i> C (Needs Work)</span>
                                             <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                        <i class="fas fa-book-open" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
+                                        No marks assigned yet.
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                        </td>
-
-                    </tr>
-
-                    <% }) %>
-
-            </table>
-
-        </div>
-
+        </main>
     </div>
-
 </body>
 
 </html>

@@ -2,102 +2,198 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Attendance</title>
-
-    <link rel="stylesheet" href="/css/style.css">
-
+    <title>Student Directory - ERP Portal</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 </head>
 
 <body>
-
     <div class="dashboard">
 
-        <div class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>🎓 ERP Portal</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li class="active"><a href="/students">👨‍🎓 Students</a></li>
+                <li><a href="/attendance">📅 Attendance</a></li>
+                <li><a href="/marks">📝 Marks</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
 
-            <h2>🎓 ERP</h2>
+        <!-- Main Content -->
+        <main class="main">
 
-            <a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="header-left">
+                    <h1>Student Directory</h1>
+                    <p>Manage student enrollments, academic details, and profiles</p>
+                </div>
 
-            <a href="/students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <div class="header-right">
+                    <form action="/students" method="GET" class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" placeholder="Search student name..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+                    </form>
 
-            <a href="/attendance" class="active"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
 
-            <a href="/marks"><i class="fa-solid fa-book"></i> Marks</a>
+                    <div class="profile">
+                        <div class="avatar">
+                            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                        <div>
+                            <h4><%= (locals.user && locals.user.name) ? locals.user.name : 'User' %></h4>
+                            <small><%= (locals.user && locals.user.role === 'admin') ? 'Administrator' : 'Student (' + (locals.user && locals.user.roll ? locals.user.roll : '') + ')' %></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <a href="/reports"><i class="fa-solid fa-chart-column"></i> Reports</a>
+            <!-- Stats Overview -->
+            <div class="cards">
+                <div class="card purple">
+                    <h2><%= students ? students.length : 0 %></h2>
+                    <p>Total Enrolled</p>
+                </div>
+                <div class="card green">
+                    <h2>Active</h2>
+                    <p>Academic Status</p>
+                </div>
+                <div class="card red">
+                    <h2>CS / IT / ME</h2>
+                    <p>Branches</p>
+                </div>
+                <div class="card pink">
+                    <h2>2026</h2>
+                    <p>Academic Year</p>
+                </div>
+            </div>
 
-            <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            <% if (locals.user && locals.user.role === 'admin') { %>
+            <!-- Add Student Glass Card (Admin Only) -->
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <h3><i class="fas fa-user-plus" style="color: #6c63ff;"></i> Register New Student</h3>
+                    <span style="color: #9aa4c5; font-size: 13px;">Fill in student details below</span>
+                </div>
 
-        </div>
+                <form action="/students/add" method="POST">
+                    <div class="glass-form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" name="name" class="glass-input" placeholder="e.g. Alex Morgan" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> Roll Number</label>
+                            <input type="text" name="roll" class="glass-input" placeholder="e.g. CS-101" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-graduation-cap"></i> Branch</label>
+                            <select name="branch" class="glass-select" required>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Information Tech">Information Tech</option>
+                                <option value="Mechanical Eng">Mechanical Eng</option>
+                                <option value="Electronics Eng">Electronics Eng</option>
+                                <option value="Civil Eng">Civil Eng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Semester</label>
+                            <input type="text" name="semester" class="glass-input" placeholder="e.g. 6th" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Contact Phone</label>
+                            <input type="text" name="phone" class="glass-input" placeholder="e.g. +1 9876543210" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-glow btn-success-glow" style="width: 100%;">
+                                <i class="fas fa-plus-circle"></i> Save Student
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <% } %>
 
-        <div class="content">
+            <!-- Student Directory Table Card -->
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <h3><i class="fas fa-list-ul" style="color: #00e5ff;"></i> Enrolled Students List</h3>
+                    <% if (typeof search !== 'undefined' && search) { %>
+                        <a href="/students" class="btn-glow btn-secondary-glow btn-sm"><i class="fas fa-times"></i> Clear Search Filter</a>
+                    <% } %>
+                </div>
 
-            <h1>📅 Student Attendance</h1>
+                <div class="table-container">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th># ID</th>
+                                <th>Student Name</th>
+                                <th>Roll No</th>
+                                <th>Branch</th>
+                                <th>Semester</th>
+                                <th>Phone</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (students && students.length) { %>
+                                <% students.forEach(student => { %>
+                                    <tr>
+                                        <td style="color: #6c63ff; font-weight: bold;">#<%= student.id %></td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div class="avatar" style="width: 34px; height: 34px; font-size: 14px;">
+                                                    <%= student.name ? student.name.charAt(0).toUpperCase() : 'S' %>
+                                                </div>
+                                                <b><%= student.name %></b>
+                                            </div>
+                                        </td>
+                                        <td><span style="font-family: monospace; color: #cbd5e1;"><%= student.roll %></span></td>
+                                        <td><span class="pill-badge pill-branch"><i class="fas fa-code-branch"></i> <%= student.branch %></span></td>
+                                        <td><span style="color: #9aa4c5;"><%= student.semester %></span></td>
+                                        <td><span style="color: #9aa4c5;"><i class="fas fa-phone-alt" style="font-size: 12px; margin-right: 5px;"></i> <%= student.phone %></span></td>
+                                        <td style="text-align: right;">
+                                            <% if (locals.user && locals.user.role === 'admin') { %>
+                                                <a href="/students/edit/<%= student.id %>" class="btn-glow btn-secondary-glow btn-sm" style="margin-right: 6px;">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="/students/delete/<%= student.id %>" class="btn-glow btn-danger-glow btn-sm" onclick="return confirm('Are you sure you want to delete <%= student.name %>?')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            <% } else { %>
+                                                <span class="pill-badge pill-present"><i class="fas fa-eye"></i> Verified</span>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                        <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
+                                        No student records found in the system.
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-            <br>
-
-            <form action="/attendance/save" method="POST">
-
-                <label><b>Select Date</b></label>
-
-                <input type="date" name="date" required>
-
-                <br><br>
-
-                <table class="report-table">
-
-                    <tr>
-
-                        <th>Student Name</th>
-
-                        <th>Present</th>
-
-                        <th>Absent</th>
-
-                    </tr>
-
-                    <% students.forEach(student=>{ %>
-
-                        <tr>
-
-                            <td>
-                                <%= student.name %>
-                            </td>
-
-                            <td style="text-align:center;">
-                                <input type="radio" name="status[<%= student.id %>]" value="Present" required>
-                            </td>
-
-                            <td style="text-align:center;">
-                                <input type="radio" name="status[<%= student.id %>]" value="Absent">
-                            </td>
-
-                        </tr>
-
-                        <% }) %>
-
-                </table>
-
-                <br>
-
-                <button type="submit">
-
-                    💾 Save Attendance
-
-                </button>
-
-            </form>
-
-        </div>
-
+        </main>
     </div>
-
 </body>
 
 </html>

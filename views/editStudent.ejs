@@ -1,40 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-
-    <title>Edit Student</title>
-
-    <link rel="stylesheet" href="/css/style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Student - ERP Portal</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
+    <div class="dashboard">
 
-    <div class="main">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>🎓 ERP Portal</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li class="active"><a href="/students">👨‍🎓 Students</a></li>
+                <li><a href="/attendance">📅 Attendance</a></li>
+                <li><a href="/marks">📝 Marks</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
 
-        <h1>Edit Student</h1>
+        <!-- Main Content -->
+        <main class="main">
 
-        <form action="/students/update/<%= student.id %>" method="POST">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="header-left">
+                    <h1>Edit Student Profile</h1>
+                    <p>Update information for <b><%= student ? student.name : 'Student' %></b></p>
+                </div>
 
-            <input type="text" name="name" value="<%= student.name %>" required>
+                <div class="header-right">
+                    <a href="/students" class="btn-glow btn-secondary-glow btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to Student Directory
+                    </a>
+                    <div class="profile">
+                        <div class="avatar">
+                            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : 'A' %>
+                        </div>
+                        <div>
+                            <h4><%= (locals.user && locals.user.name) ? locals.user.name : 'Administrator' %></h4>
+                            <small><%= (locals.user && locals.user.role === 'admin') ? 'Administrator' : 'Student (' + (locals.user && locals.user.roll ? locals.user.roll : '') + ')' %></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <input type="text" name="roll" value="<%= student.roll %>" required>
+            <!-- Edit Student Glass Form Card -->
+            <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="glass-card-header">
+                    <h3><i class="fas fa-user-edit" style="color: #6c63ff;"></i> Student Details</h3>
+                    <span style="color: #9aa4c5; font-size: 13px;">ID: #<%= student ? student.id : '' %></span>
+                </div>
 
-            <input type="text" name="branch" value="<%= student.branch %>" required>
+                <form action="/students/update/<%= student ? student.id : '' %>" method="POST">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Student Name</label>
+                            <input type="text" name="name" class="glass-input" value="<%= student ? student.name : '' %>" required>
+                        </div>
 
-            <input type="text" name="semester" value="<%= student.semester %>" required>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> Roll Number</label>
+                            <input type="text" name="roll" class="glass-input" value="<%= student ? student.roll : '' %>" required>
+                        </div>
 
-            <input type="text" name="phone" value="<%= student.phone %>" required>
+                        <div class="form-group">
+                            <label><i class="fas fa-graduation-cap"></i> Branch</label>
+                            <select name="branch" class="glass-select" required>
+                                <option value="Computer Science" <%= student && student.branch === 'Computer Science' ? 'selected' : '' %>>Computer Science</option>
+                                <option value="Information Tech" <%= student && student.branch === 'Information Tech' ? 'selected' : '' %>>Information Tech</option>
+                                <option value="Mechanical Eng" <%= student && student.branch === 'Mechanical Eng' ? 'selected' : '' %>>Mechanical Eng</option>
+                                <option value="Electronics Eng" <%= student && student.branch === 'Electronics Eng' ? 'selected' : '' %>>Electronics Eng</option>
+                                <option value="Civil Eng" <%= student && student.branch === 'Civil Eng' ? 'selected' : '' %>>Civil Eng</option>
+                            </select>
+                        </div>
 
-            <button>
-                Update Student
-            </button>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Semester</label>
+                            <input type="text" name="semester" class="glass-input" value="<%= student ? student.semester : '' %>" required>
+                        </div>
 
-        </form>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label><i class="fas fa-phone"></i> Contact Phone</label>
+                            <input type="text" name="phone" class="glass-input" value="<%= student ? student.phone : '' %>" required>
+                        </div>
+                    </div>
 
+                    <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                        <a href="/students" class="btn-glow btn-secondary-glow">Cancel</a>
+                        <button type="submit" class="btn-glow btn-primary-glow">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
     </div>
-
 </body>
 
 </html>
