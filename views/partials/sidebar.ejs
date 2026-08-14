@@ -1,0 +1,36 @@
+<aside class="sidebar">
+    <div class="logo">
+        <h2>🎓 ERP Portal</h2>
+    </div>
+
+    <div class="user-sidebar-profile">
+        <div class="user-sidebar-avatar">
+            <%= (locals.user && locals.user.name) ? locals.user.name.charAt(0).toUpperCase() : (locals.user && locals.user.role === 'admin' ? 'A' : 'S') %>
+        </div>
+        <div class="user-sidebar-info">
+            <span class="user-sidebar-name"><%= (locals.user && locals.user.name) ? locals.user.name : (locals.user && locals.user.role === 'admin' ? 'Administrator' : 'Student Account') %></span>
+            <span class="user-sidebar-role"><%= (locals.user && locals.user.role) ? (locals.user.role === 'admin' ? 'Admin Portal' : 'Student View') : 'Portal User' %></span>
+        </div>
+    </div>
+
+    <ul class="menu">
+        <li class="<%= (typeof active !== 'undefined' && active === 'dashboard') ? 'active' : '' %>">
+            <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li class="<%= (typeof active !== 'undefined' && active === 'students') ? 'active' : '' %>">
+            <a href="/students"><i class="fas fa-user-graduate"></i> Students</a>
+        </li>
+        <li class="<%= (typeof active !== 'undefined' && active === 'attendance') ? 'active' : '' %>">
+            <a href="/attendance"><i class="fas fa-calendar-alt"></i> Attendance</a>
+        </li>
+        <li class="<%= (typeof active !== 'undefined' && active === 'marks') ? 'active' : '' %>">
+            <a href="/marks"><i class="fas fa-file-invoice"></i> Marks</a>
+        </li>
+        <li class="<%= (typeof active !== 'undefined' && active === 'reports') ? 'active' : '' %>">
+            <a href="/reports"><i class="fas fa-chart-bar"></i> Reports</a>
+        </li>
+        <li>
+            <a href="/logout" class="menu-logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+    </ul>
+</aside>

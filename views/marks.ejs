@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Marks & Performance - ERP Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,20 +16,8 @@
 <body>
     <div class="dashboard">
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>🎓 ERP Portal</h2>
-            </div>
-            <ul class="menu">
-                <li><a href="/dashboard">🏠 Dashboard</a></li>
-                <li><a href="/students">👨‍🎓 Students</a></li>
-                <li><a href="/attendance">📅 Attendance</a></li>
-                <li class="active"><a href="/marks">📝 Marks</a></li>
-                <li><a href="/reports">📊 Reports</a></li>
-                <li><a href="/logout">🚪 Logout</a></li>
-            </ul>
-        </aside>
+        <!-- Sidebar Navigation -->
+        <%- include('partials/sidebar', { active: 'marks' }) %>
 
         <!-- Main Content -->
         <main class="main">
@@ -37,14 +25,26 @@
             <!-- Top Bar -->
             <div class="topbar">
                 <div class="header-left">
-                    <h1>Student Marks & Performance</h1>
-                    <p>Enter total scores and track academic grading performance</p>
+                    <button type="button" class="mobile-menu-toggle" aria-label="Open Navigation Menu" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1>Student Marks & Performance</h1>
+                        <p>Enter total scores and track academic grading performance</p>
+                    </div>
                 </div>
 
                 <div class="header-right">
-                    <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
-                        <i class="fas fa-moon"></i>
-                        <span class="theme-label">Dark</span>
+                    <button type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                        <div class="theme-toggle-inner">
+                            <div class="theme-icon-box">
+                                <i class="fas fa-sun sun-icon"></i>
+                            </div>
+                            <span class="theme-label">Light</span>
+                            <div class="theme-toggle-switch">
+                                <span class="theme-toggle-knob"></span>
+                            </div>
+                        </div>
                     </button>
 
                     <div class="header-icon">
@@ -140,7 +140,7 @@
                     </div>
                 </div>
 
-                <div class="table-container">
+                <div class="table-container table-responsive-wrapper">
                     <table class="glass-table">
                         <thead>
                             <tr>

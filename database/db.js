@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS students(
     password TEXT DEFAULT 'student123'
 )
 `, () => {
-    // Ensure password column exists if table was created previously without it
-    db.run("ALTER TABLE students ADD COLUMN password TEXT DEFAULT 'student123'", () => {
-        // Ensure all students have student123 password set if null or empty
+    // Try adding password column safely if it doesn't exist
+    db.run("ALTER TABLE students ADD COLUMN password TEXT DEFAULT 'student123'", (err) => {
+        // Ignore duplicate column error and ensure default values
         db.run("UPDATE students SET password = 'student123' WHERE password IS NULL OR password = ''", () => {});
     });
 

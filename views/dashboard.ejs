@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 
     <title>Dashboard</title>
 
@@ -20,23 +20,8 @@
 
     <div class="dashboard">
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
-
-            <div class="logo">
-                <h2>🎓 ERP Portal</h2>
-            </div>
-
-            <ul class="menu">
-                <li class="active"><a href="/dashboard">🏠 Dashboard</a></li>
-                <li><a href="/students">👨‍🎓 Students</a></li>
-                <li><a href="/attendance">📅 Attendance</a></li>
-                <li><a href="/marks">📝 Marks</a></li>
-                <li><a href="/reports">📊 Reports</a></li>
-                <li><a href="/logout">🚪 Logout</a></li>
-            </ul>
-
-        </aside>
+        <!-- Sidebar Navigation -->
+        <%- include('partials/sidebar', { active: 'dashboard' }) %>
 
         <!-- Main Content -->
         <main class="main">
@@ -45,8 +30,13 @@
             <div class="topbar">
 
                 <div class="header-left">
-                    <h1>Dashboard</h1>
-                    <p>Welcome back, <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %> 👋</p>
+                    <button type="button" class="mobile-menu-toggle" aria-label="Open Navigation Menu" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p>Welcome back, <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %> 👋</p>
+                    </div>
                 </div>
 
                 <div class="header-right">
@@ -56,9 +46,16 @@
                         <input type="text" placeholder="Search portal...">
                     </div>
 
-                    <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
-                        <i class="fas fa-moon"></i>
-                        <span class="theme-label">Dark</span>
+                    <button type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                        <div class="theme-toggle-inner">
+                            <div class="theme-icon-box">
+                                <i class="fas fa-sun sun-icon"></i>
+                            </div>
+                            <span class="theme-label">Light</span>
+                            <div class="theme-toggle-switch">
+                                <span class="theme-toggle-knob"></span>
+                            </div>
+                        </div>
                     </button>
 
                     <div class="header-icon">

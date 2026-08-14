@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>ERP Portal Authentication</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,9 +28,16 @@
             <a href="/" class="brand-badge">
                 🎓 Student<span>ERP</span>
             </a>
-            <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
-                <i class="fas fa-moon"></i>
-                <span class="theme-label">Dark</span>
+            <button type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                <div class="theme-toggle-inner">
+                    <div class="theme-icon-box">
+                        <i class="fas fa-sun sun-icon"></i>
+                    </div>
+                    <span class="theme-label">Light</span>
+                    <div class="theme-toggle-switch">
+                        <span class="theme-toggle-knob"></span>
+                    </div>
+                </div>
             </button>
         </header>
 
