@@ -7,12 +7,12 @@ const { requireAuth, requireAdmin } = require("../middleware/auth");
 router.get("/students", requireAuth, async (req, res) => {
     try {
         const search = req.query.search;
-        let sql = "SELECT * FROM students";
+        let sql = "SELECT * FROM students ORDER BY id DESC";
         let params = [];
 
         if (search) {
-            sql = "SELECT * FROM students WHERE name LIKE ?";
-            params = ['%' + search + '%'];
+            sql = "SELECT * FROM students WHERE name LIKE ? OR roll LIKE ? ORDER BY id DESC";
+            params = ['%' + search + '%', '%' + search + '%'];
         }
 
         const rows = await db.allAsync(sql, params);
@@ -26,15 +26,38 @@ router.get("/students", requireAuth, async (req, res) => {
 // Add Student (Admin Only)
 router.post("/students/add", requireAuth, requireAdmin, async (req, res) => {
     try {
-        const { name, roll, branch, semester, phone } = req.body;
+        let { name, roll, branch, semester, phone } = req.body;
+        name = (name || '').trim();
+        roll = (roll || '').trim();
+        branch = (branch || 'Computer Science').trim();
+        semester = (semester || '1st').trim();
+        phone = (phone || '').trim();
+
+        if (!name) {
+            return res.redirect("/students");
+        }
+
+        // Auto-generate roll if missing
+        let finalRoll = roll;
+        if (!finalRoll) {
+            finalRoll = 'STU-' + Math.floor(1000 + Math.random() * 9000);
+        }
+
+        // Safely check for existing roll to prevent SQLite UNIQUE constraint failure
+        const existing = await db.getAsync("SELECT * FROM students WHERE roll = ?", [finalRoll]);
+        if (existing) {
+            finalRoll = `${finalRoll}-${Date.now().toString().slice(-4)}`;
+        }
+
         await db.runAsync(
-            `INSERT INTO students(name,roll,branch,semester,phone,password) VALUES(?,?,?,?,?,'student123')`,
-            [name, roll, branch, semester, phone]
+            `INSERT INTO students(name, roll, branch, semester, phone, password) VALUES(?, ?, ?, ?, ?, 'student123')`,
+            [name, finalRoll, branch, semester, phone]
         );
+
         res.redirect("/students");
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        console.error("Error adding student:", err);
+        res.redirect("/students");
     }
 });
 
