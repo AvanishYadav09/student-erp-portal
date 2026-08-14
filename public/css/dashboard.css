@@ -98,10 +98,10 @@ body {
 body::before {
     content: "";
     position: fixed;
-    top: -25%;
-    left: -25%;
-    width: 150vw;
-    height: 150vh;
+    top: -30%;
+    left: -30%;
+    width: 160vw;
+    height: 160vh;
     background:
         radial-gradient(circle at 15% 25%, rgba(56, 189, 248, var(--aurora-opacity)), transparent 45%),
         radial-gradient(circle at 85% 75%, rgba(168, 85, 247, var(--aurora-opacity)), transparent 45%),
@@ -109,8 +109,8 @@ body::before {
         radial-gradient(circle at 70% 30%, rgba(52, 211, 153, var(--aurora-opacity)), transparent 40%),
         radial-gradient(circle at 30% 85%, rgba(251, 146, 60, var(--aurora-opacity)), transparent 40%);
     z-index: -2;
-    filter: blur(70px);
-    animation: auroraDance 25s ease-in-out infinite alternate;
+    filter: blur(80px);
+    animation: auroraDance 18s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 body::after {
@@ -118,25 +118,25 @@ body::after {
     position: fixed;
     inset: 0;
     background-image: 
-        radial-gradient(rgba(14, 165, 233, var(--grid-opacity)) 1px, transparent 1px),
+        radial-gradient(rgba(14, 165, 233, calc(var(--grid-opacity) * 1.5)) 1.5px, transparent 1.5px),
         linear-gradient(rgba(14, 165, 233, var(--grid-opacity)) 1px, transparent 1px),
         linear-gradient(90deg, rgba(14, 165, 233, var(--grid-opacity)) 1px, transparent 1px);
-    background-size: 60px 60px, 40px 40px, 40px 40px;
+    background-size: 50px 50px, 35px 35px, 35px 35px;
     z-index: -1;
     pointer-events: none;
-    animation: gridMotion 40s linear infinite;
+    animation: gridMotion 25s linear infinite;
 }
 
 @keyframes auroraDance {
     0% { transform: rotate(0deg) scale(1) translate(0, 0); }
-    33% { transform: rotate(4deg) scale(1.06) translate(30px, -20px); }
-    66% { transform: rotate(-3deg) scale(0.97) translate(-20px, 30px); }
-    100% { transform: rotate(2deg) scale(1.08) translate(15px, -15px); }
+    33% { transform: rotate(8deg) scale(1.15) translate(50px, -35px); }
+    66% { transform: rotate(-6deg) scale(0.92) translate(-35px, 45px); }
+    100% { transform: rotate(12deg) scale(1.2) translate(25px, -25px); }
 }
 
 @keyframes gridMotion {
     0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: 120px 120px, 80px 80px, 80px 80px; }
+    100% { background-position: 100px 100px, 70px 70px, 70px 70px; }
 }
 
 /* ==========================================================================

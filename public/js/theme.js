@@ -1,4 +1,4 @@
-// Premium Theme Toggle & Mobile Menu Drawer System
+// Premium Theme Toggle & Interactive Background Canvas System
 (function () {
     // Determine initial theme: localStorage -> system preference -> fallback 'light'
     const getInitialTheme = () => {
@@ -39,7 +39,7 @@
             osc.start();
             osc.stop(ctx.currentTime + 0.08);
         } catch (e) {
-            // Audio context not allowed or unsupported
+            // Audio context unsupported
         }
     }
 
@@ -49,6 +49,9 @@
             document.body.setAttribute('data-theme', savedTheme);
         }
         updateToggleButtons(savedTheme);
+
+        // Initialize Interactive Canvas Background
+        initCrazyBackgroundCanvas();
 
         // Global Event Listener for Theme Toggle Buttons
         document.addEventListener('click', (e) => {
@@ -160,7 +163,139 @@
         });
     }
 
-    // Listen for OS theme changes if user hasn't explicitly saved a preference
+    // Interactive Crazy Particle & Aurora Background Canvas System
+    function initCrazyBackgroundCanvas() {
+        let canvas = document.getElementById('heroBgCanvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'heroBgCanvas';
+            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:0.85;transition:opacity 0.5s ease;';
+            document.body.prepend(canvas);
+        }
+
+        const ctx = canvas.getContext('2d');
+        let width = (canvas.width = window.innerWidth);
+        let height = (canvas.height = window.innerHeight);
+
+        let mouse = { x: width / 2, y: height / 2, active: false };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.active = false;
+        });
+
+        const particleCount = Math.min(Math.floor((width * height) / 16000), 60);
+        const particles = [];
+
+        const getColors = () => {
+            const theme = document.documentElement.getAttribute('data-theme') || 'light';
+            return theme === 'dark' 
+                ? ['rgba(0, 229, 255, ', 'rgba(59, 130, 246, ', 'rgba(168, 85, 247, ', 'rgba(244, 63, 94, ']
+                : ['rgba(56, 189, 248, ', 'rgba(129, 140, 248, ', 'rgba(236, 72, 153, ', 'rgba(52, 211, 153, '];
+        };
+
+        let colors = getColors();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 2.5 + 1.2;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.pulseSpeed = 0.015 + Math.random() * 0.02;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.pulseSpeed;
+                this.currentAlpha = this.alpha + Math.sin(this.angle) * 0.25;
+
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                if (mouse.active) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const force = (150 - dist) / 150;
+                        this.x -= (dx / dist) * force * 3;
+                        this.y -= (dy / dist) * force * 3;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + Math.max(0.1, Math.min(1, this.currentAlpha)) + ')';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color + '0.8)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Connect nearby nodes
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        const opacity = (1 - dist / 130) * 0.28;
+                        ctx.strokeStyle = particles[i].color + opacity + ')';
+                        ctx.lineWidth = 0.9;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Re-assign colors when theme changes
+        const observer = new MutationObserver(() => {
+            colors = getColors();
+            particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+
+    // Listen for OS theme changes
     if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
             if (!localStorage.getItem('erp_theme')) {

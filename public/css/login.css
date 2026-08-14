@@ -197,76 +197,83 @@ body {
 }
 
 /* Animated Glowing Background Orbs */
+/* Animated Glowing Background Orbs & Cyber Waves */
 .bg-glow-1 {
-    position: absolute;
-    top: -15%;
-    left: -15%;
-    width: 65vw;
-    height: 65vw;
+    position: fixed;
+    top: -20%;
+    left: -20%;
+    width: 70vw;
+    height: 70vw;
     background: radial-gradient(circle, var(--aurora-1) 0%, rgba(248, 250, 252, 0) 70%);
-    border-radius: 50%;
-    filter: blur(75px);
-    animation: floatOrb1 18s ease-in-out infinite alternate;
+    border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
+    filter: blur(80px);
+    animation: floatOrb1 14s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .bg-glow-2 {
-    position: absolute;
-    bottom: -15%;
-    right: -15%;
-    width: 70vw;
-    height: 70vw;
+    position: fixed;
+    bottom: -20%;
+    right: -20%;
+    width: 75vw;
+    height: 75vw;
     background: radial-gradient(circle, var(--aurora-2) 0%, rgba(248, 250, 252, 0) 70%);
-    border-radius: 50%;
-    filter: blur(75px);
-    animation: floatOrb2 22s ease-in-out infinite alternate-reverse;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    filter: blur(85px);
+    animation: floatOrb2 18s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate-reverse;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .bg-glow-3 {
-    position: absolute;
-    top: 35%;
-    left: 35%;
-    width: 50vw;
-    height: 50vw;
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    width: 55vw;
+    height: 55vw;
     background: radial-gradient(circle, var(--aurora-3) 0%, rgba(248, 250, 252, 0) 70%);
-    border-radius: 50%;
-    filter: blur(85px);
-    animation: floatOrb3 24s ease-in-out infinite alternate;
+    border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%;
+    filter: blur(90px);
+    animation: floatOrb3 20s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
+    pointer-events: none;
+    z-index: 1;
 }
 
 @keyframes floatOrb1 {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    50% { transform: translate(60px, -40px) rotate(10deg) scale(1.1); }
-    100% { transform: translate(-30px, 50px) rotate(-5deg) scale(0.95); }
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+    50% { transform: translate(80px, -60px) rotate(120deg) scale(1.2); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    100% { transform: translate(-50px, 70px) rotate(240deg) scale(0.9); border-radius: 35% 65% 50% 50% / 50% 45% 55% 50%; }
 }
 
 @keyframes floatOrb2 {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    50% { transform: translate(-50px, 40px) rotate(-10deg) scale(1.12); }
-    100% { transform: translate(40px, -30px) rotate(8deg) scale(0.98); }
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { transform: translate(-70px, 60px) rotate(-140deg) scale(1.22); border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
+    100% { transform: translate(60px, -50px) rotate(-280deg) scale(0.95); border-radius: 55% 45% 35% 65% / 45% 55% 45% 55%; }
 }
 
 @keyframes floatOrb3 {
     0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-40px, -50px) scale(1.15); }
-    100% { transform: translate(50px, 30px) scale(0.9); }
+    50% { transform: translate(-60px, -70px) scale(1.25); }
+    100% { transform: translate(70px, 50px) scale(0.85); }
 }
 
 .grid-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background-image: 
-        radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px),
-        linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px, 45px 45px, 45px 45px;
+        radial-gradient(rgba(14, 165, 233, 0.12) 1.5px, transparent 1.5px),
+        linear-gradient(rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px, 40px 40px, 40px 40px;
     z-index: 1;
     pointer-events: none;
-    animation: loginGridDrift 35s linear infinite;
+    animation: loginGridDrift 30s linear infinite;
 }
 
 @keyframes loginGridDrift {
     0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: 120px 120px, 90px 90px, 90px 90px; }
+    100% { background-position: 100px 100px, 80px 80px, 80px 80px; }
 }
 
 /* ==========================================================================
