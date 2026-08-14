@@ -1,4 +1,4 @@
-// Premium Theme Toggle & Interactive Background Canvas System
+// Premium Theme Toggle & Interactive Liquid Cyber Background Engine
 (function () {
     // Determine initial theme: localStorage -> system preference -> fallback 'light'
     const getInitialTheme = () => {
@@ -50,7 +50,7 @@
         }
         updateToggleButtons(savedTheme);
 
-        // Initialize Interactive Canvas Background
+        // Initialize Liquid Cyber & 3D Prism Background Canvas Engine
         initCrazyBackgroundCanvas();
 
         // Global Event Listener for Theme Toggle Buttons
@@ -163,7 +163,7 @@
         });
     }
 
-    // Interactive Crazy Particle & Aurora Background Canvas System
+    // Interactive Liquid Cyber & 3D Holographic Prism Background Canvas System
     function initCrazyBackgroundCanvas() {
         let canvas = document.getElementById('heroBgCanvas');
         if (!canvas) {
@@ -177,108 +177,163 @@
         let width = (canvas.width = window.innerWidth);
         let height = (canvas.height = window.innerHeight);
 
-        let mouse = { x: width / 2, y: height / 2, active: false };
+        let time = 0;
+        const ripples = [];
 
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         });
 
+        // Trigger interactive shockwave ripples on click or mousemove
+        window.addEventListener('click', (e) => {
+            createRipple(e.clientX, e.clientY);
+        });
+
         window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            mouse.active = true;
+            if (Math.random() < 0.12) {
+                createRipple(e.clientX, e.clientY, true);
+            }
         });
 
-        window.addEventListener('mouseleave', () => {
-            mouse.active = false;
-        });
+        function createRipple(x, y, isSubtle = false) {
+            ripples.push({
+                x,
+                y,
+                radius: isSubtle ? 10 : 15,
+                maxRadius: isSubtle ? 80 + Math.random() * 50 : 200 + Math.random() * 80,
+                alpha: isSubtle ? 0.35 : 0.7,
+                color: getThemeGlowColor()
+            });
+        }
 
-        const particleCount = Math.min(Math.floor((width * height) / 16000), 60);
-        const particles = [];
+        function getThemeGlowColor() {
+            const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
+            const colors = isDark 
+                ? ['0, 229, 255', '192, 132, 252', '244, 63, 94', '59, 130, 246']
+                : ['56, 189, 248', '139, 92, 246', '245, 158, 11', '16, 185, 129'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
 
-        const getColors = () => {
-            const theme = document.documentElement.getAttribute('data-theme') || 'light';
-            return theme === 'dark' 
-                ? ['rgba(0, 229, 255, ', 'rgba(59, 130, 246, ', 'rgba(168, 85, 247, ', 'rgba(244, 63, 94, ']
-                : ['rgba(56, 189, 248, ', 'rgba(129, 140, 248, ', 'rgba(236, 72, 153, ', 'rgba(52, 211, 153, '];
-        };
-
-        let colors = getColors();
-
-        class Particle {
+        // Floating 3D Geometric Prisms
+        class Prism {
             constructor() {
                 this.reset();
             }
             reset() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.radius = Math.random() * 2.5 + 1.2;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = (Math.random() - 0.5) * 0.8;
-                this.alpha = Math.random() * 0.5 + 0.3;
-                this.pulseSpeed = 0.015 + Math.random() * 0.02;
-                this.angle = Math.random() * Math.PI * 2;
+                this.size = 16 + Math.random() * 24;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.02;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = (Math.random() - 0.5) * 0.6;
+                this.alpha = 0.2 + Math.random() * 0.35;
             }
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.angle += this.pulseSpeed;
-                this.currentAlpha = this.alpha + Math.sin(this.angle) * 0.25;
+                this.rotation += this.rotSpeed;
 
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-
-                if (mouse.active) {
-                    const dx = mouse.x - this.x;
-                    const dy = mouse.y - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        const force = (150 - dist) / 150;
-                        this.x -= (dx / dist) * force * 3;
-                        this.y -= (dy / dist) * force * 3;
-                    }
-                }
+                if (this.x < -40) this.x = width + 40;
+                if (this.x > width + 40) this.x = -40;
+                if (this.y < -40) this.y = height + 40;
+                if (this.y > height + 40) this.y = -40;
             }
             draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                const rgb = getThemeGlowColor();
+                ctx.strokeStyle = `rgba(${rgb}, ${this.alpha})`;
+                ctx.fillStyle = `rgba(${rgb}, ${this.alpha * 0.12})`;
+                ctx.lineWidth = 1.5;
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = `rgba(${rgb}, 0.6)`;
+
+                // Draw 3D Wireframe Diamond / Octahedron
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color + Math.max(0.1, Math.min(1, this.currentAlpha)) + ')';
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color + '0.8)';
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(this.size * 0.65, 0);
+                ctx.lineTo(0, this.size);
+                ctx.lineTo(-this.size * 0.65, 0);
+                ctx.closePath();
+                ctx.stroke();
                 ctx.fill();
+
+                // Inner cross line for 3D depth perspective
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(0, this.size);
+                ctx.moveTo(-this.size * 0.65, 0);
+                ctx.lineTo(this.size * 0.65, 0);
+                ctx.strokeStyle = `rgba(${rgb}, ${this.alpha * 0.45})`;
+                ctx.stroke();
+
+                ctx.restore();
             }
         }
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+        const prisms = Array.from({ length: 16 }, () => new Prism());
+
+        // Liquid Sine Waves Render Function
+        function drawLiquidWaves() {
+            const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
+            const waveConfigs = isDark ? [
+                { color: 'rgba(0, 229, 255, 0.06)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
+                { color: 'rgba(192, 132, 252, 0.05)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
+                { color: 'rgba(244, 63, 94, 0.04)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
+            ] : [
+                { color: 'rgba(56, 189, 248, 0.08)', speed: 0.008, freq: 0.004, amp: 40, yOffset: height * 0.65 },
+                { color: 'rgba(139, 92, 246, 0.06)', speed: 0.012, freq: 0.005, amp: 55, yOffset: height * 0.5 },
+                { color: 'rgba(244, 114, 182, 0.05)', speed: 0.006, freq: 0.003, amp: 45, yOffset: height * 0.75 }
+            ];
+
+            waveConfigs.forEach(wave => {
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                for (let x = 0; x <= width; x += 15) {
+                    const y = Math.sin(x * wave.freq + time * wave.speed) * wave.amp + wave.yOffset;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(width, height);
+                ctx.closePath();
+                ctx.fillStyle = wave.color;
+                ctx.fill();
+            });
         }
 
+        // Main Render Loop
         function animate() {
             ctx.clearRect(0, 0, width, height);
+            time += 1;
 
-            // Connect nearby nodes
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+            // 1. Draw Liquid Sine Waves
+            drawLiquidWaves();
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+            // 2. Draw Floating 3D Wireframe Prisms
+            prisms.forEach(p => {
+                p.update();
+                p.draw();
+            });
 
-                    if (dist < 130) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        const opacity = (1 - dist / 130) * 0.28;
-                        ctx.strokeStyle = particles[i].color + opacity + ')';
-                        ctx.lineWidth = 0.9;
-                        ctx.stroke();
-                    }
+            // 3. Draw & Update Interactive Shockwave Ripples
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                const r = ripples[i];
+                r.radius += 2.5;
+                r.alpha *= 0.96;
+
+                ctx.beginPath();
+                ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(${r.color}, ${r.alpha})`;
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 18;
+                ctx.shadowColor = `rgba(${r.color}, 0.7)`;
+                ctx.stroke();
+
+                if (r.alpha <= 0.01 || r.radius >= r.maxRadius) {
+                    ripples.splice(i, 1);
                 }
             }
 
@@ -286,13 +341,6 @@
         }
 
         animate();
-
-        // Re-assign colors when theme changes
-        const observer = new MutationObserver(() => {
-            colors = getColors();
-            particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
-        });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     }
 
     // Listen for OS theme changes
