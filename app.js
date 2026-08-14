@@ -203,10 +203,10 @@ app.get("/dashboard", requireAuth, async (req, res) => {
 app.get("/marks", requireAuth, async (req, res) => {
     try {
         const user = req.session.user;
-        const students = await db.allAsync("SELECT * FROM students");
+        const students = await db.allAsync("SELECT * FROM students ORDER BY name ASC");
 
         let marksSql = `
-            SELECT marks.id, marks.total, students.name, students.id AS student_id
+            SELECT marks.id, marks.total, students.name, students.roll, students.branch, students.id AS student_id
             FROM marks
             JOIN students ON marks.student_id = students.id
         `;
@@ -216,6 +216,8 @@ app.get("/marks", requireAuth, async (req, res) => {
             marksSql += ` WHERE marks.student_id = ?`;
             params = [user.id];
         }
+
+        marksSql += ` ORDER BY marks.id DESC`;
 
         const marks = await db.allAsync(marksSql, params);
         res.render("marks", { user: req.session.user, students, marks });
@@ -228,16 +230,22 @@ app.get("/marks", requireAuth, async (req, res) => {
 app.post("/marks/add", requireAuth, requireAdmin, async (req, res) => {
     try {
         const { student_id, total } = req.body;
+        const validTotal = Math.min(100, Math.max(0, parseInt(total, 10) || 0));
+
+        if (!student_id) {
+            return res.redirect("/marks");
+        }
+
         const existing = await db.getAsync("SELECT id FROM marks WHERE student_id = ?", [student_id]);
         if (existing) {
-            await db.runAsync("UPDATE marks SET total = ? WHERE student_id = ?", [total, student_id]);
+            await db.runAsync("UPDATE marks SET total = ? WHERE student_id = ?", [validTotal, student_id]);
         } else {
-            await db.runAsync("INSERT INTO marks(student_id, total) VALUES(?,?)", [student_id, total]);
+            await db.runAsync("INSERT INTO marks(student_id, total) VALUES(?,?)", [student_id, validTotal]);
         }
         res.redirect("/marks");
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        console.error("Error saving marks:", err);
+        res.redirect("/marks");
     }
 });
 

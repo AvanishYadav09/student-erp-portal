@@ -81,11 +81,13 @@ router.post("/students/update/:id", requireAuth, requireAdmin, async (req, res) 
 router.get("/students/delete/:id", requireAuth, requireAdmin, async (req, res) => {
     try {
         const id = req.params.id;
+        await db.runAsync("DELETE FROM attendance WHERE student_id = ?", [id]);
+        await db.runAsync("DELETE FROM marks WHERE student_id = ?", [id]);
         await db.runAsync("DELETE FROM students WHERE id = ?", [id]);
         res.redirect("/students");
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        console.error("Error deleting student:", err);
+        res.redirect("/students");
     }
 });
 
