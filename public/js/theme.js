@@ -208,10 +208,7 @@
         }
 
         function getThemeGlowColor() {
-            const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
-            const colors = isDark 
-                ? ['255, 30, 86', '168, 85, 247', '236, 72, 153', '244, 63, 94', '192, 132, 252']
-                : ['225, 29, 72', '147, 51, 234', '219, 39, 119', '192, 38, 211', '244, 114, 182'];
+            const colors = ['255, 0, 60', '225, 29, 72', '220, 38, 38', '185, 28, 28', '255, 23, 68'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
@@ -279,15 +276,10 @@
 
         // Liquid Sine Waves Render Function
         function drawLiquidWaves() {
-            const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
-            const waveConfigs = isDark ? [
-                { color: 'rgba(255, 30, 86, 0.07)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
-                { color: 'rgba(168, 85, 247, 0.08)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
-                { color: 'rgba(236, 72, 153, 0.07)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
-            ] : [
-                { color: 'rgba(225, 29, 72, 0.08)', speed: 0.008, freq: 0.004, amp: 40, yOffset: height * 0.65 },
-                { color: 'rgba(147, 51, 234, 0.07)', speed: 0.012, freq: 0.005, amp: 55, yOffset: height * 0.5 },
-                { color: 'rgba(219, 39, 119, 0.06)', speed: 0.006, freq: 0.003, amp: 45, yOffset: height * 0.75 }
+            const waveConfigs = [
+                { color: 'rgba(255, 0, 60, 0.08)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
+                { color: 'rgba(220, 38, 38, 0.07)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
+                { color: 'rgba(185, 28, 28, 0.06)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
             ];
 
             waveConfigs.forEach(wave => {
