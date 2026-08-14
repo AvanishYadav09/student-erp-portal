@@ -822,8 +822,9 @@ body::after {
     background: var(--input-bg);
     border: 1px solid var(--input-border);
     border-radius: 12px;
-    color: var(--input-color);
+    color: var(--text-primary) !important;
     font-size: 15px;
+    font-weight: 600;
     outline: none;
     backdrop-filter: blur(12px);
     transition: all 0.3s ease;
@@ -831,18 +832,33 @@ body::after {
 
 .glass-input::placeholder {
     color: var(--text-muted);
+    opacity: 0.8;
 }
 
 .glass-input:focus,
 .glass-select:focus {
-    border-color: #0284c7;
-    box-shadow: 0 0 18px rgba(2, 132, 199, 0.25);
+    border-color: #ff1e56;
+    box-shadow: 0 0 20px rgba(255, 30, 86, 0.35), 0 0 0 2px rgba(236, 72, 153, 0.3);
+    background: rgba(38, 15, 64, 0.95);
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .glass-input:focus,
+[data-theme="light"] .glass-select:focus {
     background: #ffffff;
+    color: #2b0038 !important;
+    border-color: #e11d48;
+    box-shadow: 0 0 20px rgba(225, 29, 72, 0.3), 0 0 0 2px rgba(236, 72, 153, 0.25);
 }
 
 .glass-select option {
+    background: #1a0b2e;
+    color: #ffffff;
+}
+
+[data-theme="light"] .glass-select option {
     background: #ffffff;
-    color: #0f172a;
+    color: #2b0038;
 }
 
 .table-container {

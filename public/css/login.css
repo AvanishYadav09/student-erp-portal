@@ -549,7 +549,7 @@ body {
 }
 
 .input-field-wrapper i.toggle-icon:hover {
-    color: #0284c7;
+    color: #ff1e56;
 }
 
 .glass-input {
@@ -558,8 +558,9 @@ body {
     background: var(--input-bg);
     border: 1px solid var(--input-border);
     border-radius: 14px;
-    color: var(--input-color);
+    color: var(--text-primary) !important;
     font-size: 15px;
+    font-weight: 600;
     outline: none;
     backdrop-filter: blur(12px);
     transition: all 0.3s ease;
@@ -567,16 +568,25 @@ body {
 
 .glass-input::placeholder {
     color: var(--text-muted);
+    opacity: 0.8;
 }
 
 .glass-input:focus {
-    border-color: #0284c7;
+    border-color: #ff1e56;
+    background: rgba(42, 16, 70, 0.95);
+    color: #ffffff !important;
+    box-shadow: 0 0 22px rgba(255, 30, 86, 0.35), 0 0 0 2px rgba(236, 72, 153, 0.3);
+}
+
+[data-theme="light"] .glass-input:focus {
     background: #ffffff;
-    box-shadow: 0 0 20px rgba(2, 132, 199, 0.25);
+    color: #2b0038 !important;
+    border-color: #e11d48;
+    box-shadow: 0 0 22px rgba(225, 29, 72, 0.3), 0 0 0 2px rgba(236, 72, 153, 0.25);
 }
 
 .input-field-wrapper:focus-within i.lead-icon {
-    color: #0284c7;
+    color: #ff1e56;
 }
 
 /* CAPTCHA Component Styles */
