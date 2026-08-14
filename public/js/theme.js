@@ -169,7 +169,7 @@
         if (!canvas) {
             canvas = document.createElement('canvas');
             canvas.id = 'heroBgCanvas';
-            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:0.85;transition:opacity 0.5s ease;';
+            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:0.8;will-change:transform;transition:opacity 0.5s ease;';
             document.body.prepend(canvas);
         }
 
@@ -178,6 +178,7 @@
         let height = (canvas.height = window.innerHeight);
 
         let time = 0;
+        let lastMove = 0;
         const ripples = [];
 
         window.addEventListener('resize', () => {
@@ -185,34 +186,37 @@
             height = canvas.height = window.innerHeight;
         });
 
-        // Trigger interactive shockwave ripples on click or mousemove
+        // Trigger interactive shockwave ripples on click or mousemove (throttled)
         window.addEventListener('click', (e) => {
             createRipple(e.clientX, e.clientY);
         });
 
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() < 0.12) {
+            const now = Date.now();
+            if (now - lastMove > 150) {
                 createRipple(e.clientX, e.clientY, true);
+                lastMove = now;
             }
         });
 
         function createRipple(x, y, isSubtle = false) {
+            if (ripples.length > 12) ripples.shift();
             ripples.push({
                 x,
                 y,
                 radius: isSubtle ? 10 : 15,
-                maxRadius: isSubtle ? 80 + Math.random() * 50 : 200 + Math.random() * 80,
-                alpha: isSubtle ? 0.35 : 0.7,
+                maxRadius: isSubtle ? 70 : 160,
+                alpha: isSubtle ? 0.3 : 0.6,
                 color: getThemeGlowColor()
             });
         }
 
         function getThemeGlowColor() {
-            const colors = ['255, 0, 60', '225, 29, 72', '220, 38, 38', '185, 28, 28', '255, 23, 68'];
+            const colors = ['255, 0, 60', '225, 29, 72', '220, 38, 38', '185, 28, 28'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        // Floating 3D Geometric Prisms
+        // Floating 3D Geometric Prisms (Optimized Performance)
         class Prism {
             constructor() {
                 this.reset();
@@ -220,12 +224,12 @@
             reset() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.size = 16 + Math.random() * 24;
+                this.size = 14 + Math.random() * 18;
                 this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.02;
-                this.vx = (Math.random() - 0.5) * 0.6;
-                this.vy = (Math.random() - 0.5) * 0.6;
-                this.alpha = 0.2 + Math.random() * 0.35;
+                this.rotSpeed = (Math.random() - 0.5) * 0.015;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.alpha = 0.15 + Math.random() * 0.25;
             }
             update() {
                 this.x += this.vx;
@@ -244,12 +248,10 @@
 
                 const rgb = getThemeGlowColor();
                 ctx.strokeStyle = `rgba(${rgb}, ${this.alpha})`;
-                ctx.fillStyle = `rgba(${rgb}, ${this.alpha * 0.12})`;
-                ctx.lineWidth = 1.5;
-                ctx.shadowBlur = 14;
-                ctx.shadowColor = `rgba(${rgb}, 0.6)`;
+                ctx.fillStyle = `rgba(${rgb}, ${this.alpha * 0.08})`;
+                ctx.lineWidth = 1.2;
 
-                // Draw 3D Wireframe Diamond / Octahedron
+                // Draw 3D Wireframe Diamond / Octahedron without heavy shadowBlur
                 ctx.beginPath();
                 ctx.moveTo(0, -this.size);
                 ctx.lineTo(this.size * 0.65, 0);
@@ -265,27 +267,27 @@
                 ctx.lineTo(0, this.size);
                 ctx.moveTo(-this.size * 0.65, 0);
                 ctx.lineTo(this.size * 0.65, 0);
-                ctx.strokeStyle = `rgba(${rgb}, ${this.alpha * 0.45})`;
+                ctx.strokeStyle = `rgba(${rgb}, ${this.alpha * 0.35})`;
                 ctx.stroke();
 
                 ctx.restore();
             }
         }
 
-        const prisms = Array.from({ length: 16 }, () => new Prism());
+        const prisms = Array.from({ length: 8 }, () => new Prism());
 
-        // Liquid Sine Waves Render Function
+        // Liquid Sine Waves Render Function (Optimized Step)
         function drawLiquidWaves() {
             const waveConfigs = [
-                { color: 'rgba(255, 0, 60, 0.08)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
-                { color: 'rgba(220, 38, 38, 0.07)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
-                { color: 'rgba(185, 28, 28, 0.06)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
+                { color: 'rgba(255, 0, 60, 0.06)', speed: 0.008, freq: 0.004, amp: 40, yOffset: height * 0.65 },
+                { color: 'rgba(220, 38, 38, 0.05)', speed: 0.012, freq: 0.006, amp: 55, yOffset: height * 0.5 },
+                { color: 'rgba(185, 28, 28, 0.04)', speed: 0.006, freq: 0.003, amp: 45, yOffset: height * 0.75 }
             ];
 
             waveConfigs.forEach(wave => {
                 ctx.beginPath();
                 ctx.moveTo(0, height);
-                for (let x = 0; x <= width; x += 15) {
+                for (let x = 0; x <= width; x += 25) {
                     const y = Math.sin(x * wave.freq + time * wave.speed) * wave.amp + wave.yOffset;
                     ctx.lineTo(x, y);
                 }

@@ -114,24 +114,57 @@ body::before {
 }
 
 body::after {
-    content: "";
+    pointer-events: none;
+    opacity: var(--aurora-opacity);
+    will-change: transform;
+    transform: translateZ(0);
+    transition: opacity 0.5s ease;
+}
+
+.aurora-1 {
+    width: 650px;
+    height: 650px;
+    background: var(--aurora-1);
+    top: -15%;
+    left: -10%;
+    animation: auroraDance 30s ease-in-out infinite alternate;
+}
+
+.aurora-2 {
+    width: 550px;
+    height: 550px;
+    background: var(--aurora-2);
+    bottom: -15%;
+    right: -10%;
+    animation: auroraDance 35s ease-in-out infinite alternate-reverse;
+}
+
+.aurora-3 {
+    width: 450px;
+    height: 450px;
+    background: var(--aurora-3);
+    top: 35%;
+    left: 45%;
+    animation: auroraDance 25s ease-in-out infinite alternate;
+}
+
+.cyber-grid-overlay {
     position: fixed;
-    inset: 0;
-    background-image: 
-        radial-gradient(rgba(14, 165, 233, calc(var(--grid-opacity) * 1.5)) 1.5px, transparent 1.5px),
-        linear-gradient(rgba(14, 165, 233, var(--grid-opacity)) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(14, 165, 233, var(--grid-opacity)) 1px, transparent 1px);
-    background-size: 50px 50px, 35px 35px, 35px 35px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 0, 60, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: var(--grid-opacity);
     z-index: -1;
     pointer-events: none;
-    animation: gridMotion 25s linear infinite;
 }
 
 @keyframes auroraDance {
-    0% { transform: rotate(0deg) scale(1) translate(0, 0); }
-    33% { transform: rotate(8deg) scale(1.15) translate(50px, -35px); }
-    66% { transform: rotate(-6deg) scale(0.92) translate(-35px, 45px); }
-    100% { transform: rotate(12deg) scale(1.2) translate(25px, -25px); }
+    0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate3d(30px, -20px, 0) rotate(6deg) scale(1.08); }
+    100% { transform: translate3d(-20px, 30px, 0) rotate(-6deg) scale(0.95); }
 }
 
 @keyframes gridMotion {

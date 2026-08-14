@@ -33,16 +33,18 @@
     --theme-btn-border: rgba(225, 29, 72, 0.4);
 }
 
-/* Smooth Page Theme Interpolation Engine */
+/* Optimized Theme Transition Engine */
 html.theme-transitioning,
-html.theme-transitioning *,
-html.theme-transitioning *:before,
-html.theme-transitioning *:after {
-    transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important,
-                color 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important,
-                border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important,
-                box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important,
-                backdrop-filter 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+html.theme-transitioning body,
+html.theme-transitioning .glass-login-card,
+html.theme-transitioning .hero-feature-card,
+html.theme-transitioning .glass-input,
+html.theme-transitioning .btn-login-submit,
+html.theme-transitioning .theme-toggle-btn {
+    transition: background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
 
 /* Premium Upgraded Glassmorphic Theme Toggle Button */
