@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Directory - ERP Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="/js/theme.js"></script>
 </head>
 
 <body>
@@ -42,6 +46,11 @@
                         <i class="fas fa-search"></i>
                         <input type="text" name="search" placeholder="Search student name..." value="<%= typeof search !== 'undefined' ? search : '' %>">
                     </form>
+
+                    <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-label">Dark</span>
+                    </button>
 
                     <div class="header-icon">
                         <i class="fas fa-bell"></i>
@@ -84,7 +93,7 @@
             <!-- Add Student Glass Card (Admin Only) -->
             <div class="glass-card">
                 <div class="glass-card-header">
-                    <h3><i class="fas fa-user-plus" style="color: #6c63ff;"></i> Register New Student</h3>
+                    <h3><i class="fas fa-user-plus" style="color: #0ea5e9;"></i> Register New Student</h3>
                     <span style="color: #9aa4c5; font-size: 13px;">Fill in student details below</span>
                 </div>
 
@@ -152,7 +161,7 @@
                             <% if (students && students.length) { %>
                                 <% students.forEach(student => { %>
                                     <tr>
-                                        <td style="color: #6c63ff; font-weight: bold;">#<%= student.id %></td>
+                                        <td style="color: #0ea5e9; font-weight: bold;">#<%= student.id %></td>
                                         <td>
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <div class="avatar" style="width: 34px; height: 34px; font-size: 14px;">

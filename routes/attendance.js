@@ -34,19 +34,8 @@ router.post("/attendance/save", requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-router.get("/attendance/report", requireAuth, async (req, res) => {
-    try {
-        const rows = await db.allAsync(`
-            SELECT attendance.date, students.name, attendance.status
-            FROM attendance
-            JOIN students ON attendance.student_id = students.id
-            ORDER BY attendance.date DESC
-        `);
-        res.render("attendanceReport", { user: req.session.user, attendance: rows });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
-    }
+router.get("/attendance/report", requireAuth, (req, res) => {
+    res.redirect("/reports");
 });
 
 module.exports = router;

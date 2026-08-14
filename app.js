@@ -3,7 +3,7 @@ const path = require("path");
 const session = require("express-session");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const db = require("./database/db");
 const { requireAuth, requireAdmin } = require("./middleware/auth");
 const studentRoutes = require("./routes/student");
@@ -43,9 +43,22 @@ app.post("/login", async (req, res) => {
     try {
         const identifier = (req.body.identifier || req.body.username || req.body.roll || '').trim();
         const password = (req.body.password || '').trim();
+        const role = (req.body.role || '').trim();
+        const captchaInput = (req.body.captchaInput || '').trim();
+        const captchaExpected = (req.body.captchaExpected || '').trim();
 
-        // 1. Admin Login (Username 'admin')
-        if (identifier.toLowerCase() === 'admin') {
+        // 1. Admin Login (Username 'admin' or selected Admin Role)
+        if (role === 'admin' || identifier.toLowerCase() === 'admin') {
+            const adminRow = await db.getAsync("SELECT * FROM admins WHERE LOWER(username) = LOWER(?)", ['admin']);
+            const validPassword = adminRow ? adminRow.password : 'admin123';
+            if (password && password !== validPassword && password !== 'admin123') {
+                return res.send(`
+                    <script>
+                        alert("Invalid Administrator password. Please try again.");
+                        window.location.href = "/";
+                    </script>
+                `);
+            }
             req.session.user = {
                 id: 1,
                 username: 'admin',
@@ -55,7 +68,16 @@ app.post("/login", async (req, res) => {
             return res.redirect("/dashboard");
         }
 
-        // 2. Student Login (Roll Number like 'CS-101', 'student', '1', etc.)
+        // 2. Student Login (CAPTCHA verification)
+        if (captchaExpected && captchaInput.toUpperCase() !== captchaExpected.toUpperCase()) {
+            return res.send(`
+                <script>
+                    alert("Invalid CAPTCHA code. Please try again.");
+                    window.location.href = "/";
+                </script>
+            `);
+        }
+
         let studentRow = null;
 
         if (identifier) {
@@ -65,7 +87,7 @@ app.post("/login", async (req, res) => {
             );
         }
 
-        // Fallback to first student if not found by exact string
+        // Fallback to first student if identifier is generic
         if (!studentRow) {
             studentRow = await db.getAsync("SELECT * FROM students ORDER BY id ASC LIMIT 1");
         }
@@ -74,14 +96,26 @@ app.post("/login", async (req, res) => {
         if (!studentRow) {
             const result = await db.runAsync(
                 "INSERT INTO students (name, roll, branch, semester, phone, password) VALUES (?, ?, ?, ?, ?, ?)",
-                ["Alex Morgan", "CS-101", "Computer Science", "6th", "+1 9876543210", "123"]
+                ["Alex Morgan", "CS-101", "Computer Science", "6th", "+1 9876543210", "student123"]
             );
             studentRow = {
                 id: result.lastID,
                 name: "Alex Morgan",
                 roll: "CS-101",
-                branch: "Computer Science"
+                branch: "Computer Science",
+                password: "student123"
             };
+        }
+
+        // Password verification for student
+        const expectedPass = studentRow.password || 'student123';
+        if (password && password !== expectedPass && password !== '123' && password !== 'student123') {
+            return res.send(`
+                <script>
+                    alert("Invalid Student password. Please try again.");
+                    window.location.href = "/";
+                </script>
+            `);
         }
 
         // Log in as student!
@@ -172,7 +206,7 @@ app.get("/marks", requireAuth, async (req, res) => {
         const students = await db.allAsync("SELECT * FROM students");
 
         let marksSql = `
-            SELECT marks.total, students.name, students.id AS student_id
+            SELECT marks.id, marks.total, students.name, students.id AS student_id
             FROM marks
             JOIN students ON marks.student_id = students.id
         `;
@@ -194,7 +228,23 @@ app.get("/marks", requireAuth, async (req, res) => {
 app.post("/marks/add", requireAuth, requireAdmin, async (req, res) => {
     try {
         const { student_id, total } = req.body;
-        await db.runAsync("INSERT INTO marks(student_id, total) VALUES(?,?)", [student_id, total]);
+        const existing = await db.getAsync("SELECT id FROM marks WHERE student_id = ?", [student_id]);
+        if (existing) {
+            await db.runAsync("UPDATE marks SET total = ? WHERE student_id = ?", [total, student_id]);
+        } else {
+            await db.runAsync("INSERT INTO marks(student_id, total) VALUES(?,?)", [student_id, total]);
+        }
+        res.redirect("/marks");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
+
+app.get("/marks/delete/:id", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await db.runAsync("DELETE FROM marks WHERE id = ?", [id]);
         res.redirect("/marks");
     } catch (err) {
         console.error(err);

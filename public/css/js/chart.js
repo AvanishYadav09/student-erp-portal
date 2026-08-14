@@ -18,7 +18,7 @@ if (pctx) {
                 data: [72, 81, 76, 88, 91, 85],
 
                 backgroundColor: [
-                    "#6c63ff",
+                    "#0ea5e9",
                     "#00d084",
                     "#ff6b6b",
                     "#f9a826",

@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Marks & Performance - ERP Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="/js/theme.js"></script>
 </head>
 
 <body>
@@ -38,6 +42,11 @@
                 </div>
 
                 <div class="header-right">
+                    <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-label">Dark</span>
+                    </button>
+
                     <div class="header-icon">
                         <i class="fas fa-bell"></i>
                         <span class="badge">3</span>
@@ -79,7 +88,7 @@
             <!-- Add Marks Card (Admin Only) -->
             <div class="glass-card">
                 <div class="glass-card-header">
-                    <h3><i class="fas fa-plus-circle" style="color: #6c63ff;"></i> Assign Marks</h3>
+                    <h3><i class="fas fa-plus-circle" style="color: #0ea5e9;"></i> Assign Marks</h3>
                     <span style="color: #9aa4c5; font-size: 13px;">Select student and enter score</span>
                 </div>
 
@@ -87,15 +96,23 @@
                     <div class="glass-form-grid">
                         <div class="form-group" style="flex: 2;">
                             <label><i class="fas fa-user-graduate"></i> Select Student</label>
-                            <select name="student_id" class="glass-select" required>
+                            <!-- Live Search Input for Student Selection -->
+                            <div style="position: relative; margin-bottom: 6px;">
+                                <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px;"></i>
+                                <input type="text" id="studentSearchFilter" class="glass-input" style="padding-left: 36px; padding-top: 9px; padding-bottom: 9px; font-size: 13px;" placeholder="🔍 Type name, roll # or branch to filter..." onkeyup="filterAssignStudentSelect()">
+                            </div>
+                            <select name="student_id" id="studentSelectDropdown" class="glass-select" required>
                                 <% if (students && students.length) { %>
                                     <% students.forEach(student => { %>
-                                        <option value="<%= student.id %>"><%= student.name %> (<%= student.branch %> - <%= student.roll %>)</option>
+                                        <option value="<%= student.id %>" data-search="<%= (student.name + ' ' + (student.roll || '') + ' ' + (student.branch || '')).toLowerCase() %>">
+                                            <%= student.name %> (<%= student.branch %> - <%= student.roll %>)
+                                        </option>
                                     <% }) %>
                                 <% } else { %>
                                     <option value="">No students available</option>
                                 <% } %>
                             </select>
+                            <small id="searchMatchCount" style="color: #0ea5e9; font-size: 12px; font-weight: 600; margin-top: 4px; display: block;"></small>
                         </div>
 
                         <div class="form-group" style="flex: 1;">
@@ -117,6 +134,10 @@
             <div class="glass-card">
                 <div class="glass-card-header">
                     <h3><i class="fas fa-award" style="color: #00e676;"></i> Marks & Performance Registry</h3>
+                    <div class="search-box" style="width: 260px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="marksTableSearch" placeholder="Filter table records..." onkeyup="filterMarksTable()">
+                    </div>
                 </div>
 
                 <div class="table-container">
@@ -127,12 +148,15 @@
                                 <th>Total Score</th>
                                 <th>Performance Indicator</th>
                                 <th>Academic Grade</th>
+                                <% if (locals.user && locals.user.role === 'admin') { %>
+                                    <th style="text-align: right;">Actions</th>
+                                <% } %>
                             </tr>
                         </thead>
                         <tbody>
                             <% if (marks && marks.length) { %>
                                 <% marks.forEach(mark => { %>
-                                    <tr>
+                                    <tr class="marks-row">
                                         <td>
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <div class="avatar" style="width: 32px; height: 32px; font-size: 13px;">
@@ -142,7 +166,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <b style="color: #6c63ff; font-size: 16px;"><%= mark.total %>%</b>
+                                            <b style="color: #0ea5e9; font-size: 16px;"><%= mark.total %>%</b>
                                         </td>
                                         <td>
                                             <div style="width: 140px; background: #131d36; height: 10px; border-radius: 6px; overflow: hidden;">
@@ -160,11 +184,18 @@
                                                 <span class="pill-badge pill-grade-c"><i class="fas fa-exclamation-circle"></i> C (Needs Work)</span>
                                             <% } %>
                                         </td>
+                                        <% if (locals.user && locals.user.role === 'admin') { %>
+                                            <td style="text-align: right;">
+                                                <a href="/marks/delete/<%= mark.id %>" class="btn-glow btn-danger-glow btn-sm" onclick="return confirm('Are you sure you want to delete score record for <%= mark.name %>?')">
+                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                </a>
+                                            </td>
+                                        <% } %>
                                     </tr>
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="4" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                    <td colspan="<%= (locals.user && locals.user.role === 'admin') ? 5 : 4 %>" style="text-align: center; color: #9aa4c5; padding: 30px;">
                                         <i class="fas fa-book-open" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
                                         No marks assigned yet.
                                     </td>
@@ -177,6 +208,51 @@
 
         </main>
     </div>
+
+    <!-- Live Search & Filtering Script -->
+    <script>
+        function filterAssignStudentSelect() {
+            const input = document.getElementById('studentSearchFilter');
+            const filter = input.value.toLowerCase().trim();
+            const select = document.getElementById('studentSelectDropdown');
+            const options = select.getElementsByTagName('option');
+            let visibleCount = 0;
+            let firstVisibleIndex = -1;
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                if (!option.value) continue;
+                const searchData = (option.getAttribute('data-search') || option.text).toLowerCase();
+                if (searchData.includes(filter)) {
+                    option.style.display = "";
+                    visibleCount++;
+                    if (firstVisibleIndex === -1) firstVisibleIndex = i;
+                } else {
+                    option.style.display = "none";
+                }
+            }
+
+            const matchCountEl = document.getElementById('searchMatchCount');
+            if (filter) {
+                matchCountEl.innerText = visibleCount > 0 ? `✓ Found ${visibleCount} matching student(s)` : '❌ No student matches your search';
+                if (firstVisibleIndex !== -1) {
+                    select.selectedIndex = firstVisibleIndex;
+                }
+            } else {
+                matchCountEl.innerText = '';
+            }
+        }
+
+        function filterMarksTable() {
+            const input = document.getElementById('marksTableSearch');
+            const filter = input.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.marks-row');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        }
+    </script>
 </body>
 
 </html>

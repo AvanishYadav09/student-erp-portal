@@ -1,46 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP Portal Authentication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        .role-switcher {
-            display: flex;
-            background: rgba(13, 22, 41, 0.8);
-            padding: 4px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 24px;
-        }
-
-        .role-btn {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border: none;
-            background: transparent;
-            color: #9aa4c5;
-            font-weight: 600;
-            font-size: 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .role-btn.active {
-            background: linear-gradient(135deg, #6c63ff, #8b5cf6);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.35);
-        }
-    </style>
+    <script src="/js/theme.js"></script>
 </head>
 
 <body>
@@ -51,83 +21,217 @@
     <div class="bg-glow-3"></div>
     <div class="grid-overlay"></div>
 
-    <div class="login-wrapper">
-        <div class="glass-login-card">
+    <div class="full-login-container">
+        
+        <!-- Top Navigation Bar -->
+        <header class="login-top-bar">
+            <a href="/" class="brand-badge">
+                🎓 Student<span>ERP</span>
+            </a>
+            <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                <i class="fas fa-moon"></i>
+                <span class="theme-label">Dark</span>
+            </button>
+        </header>
 
-            <!-- Brand Header -->
-            <div class="login-brand">
-                <div class="brand-icon-wrapper">
-                    🎓
+        <!-- Main Split Hero Area -->
+        <div class="login-hero-wrapper">
+            
+            <!-- Left Hero Content -->
+            <div class="hero-content">
+                <div class="hero-pill">
+                    <i class="fas fa-sparkles"></i> Next-Gen Academic Management
                 </div>
-                <h1>Student ERP</h1>
-                <p id="subheading"><i class="fas fa-shield-alt" style="color: #6c63ff;"></i> Secure Administrator Portal</p>
-            </div>
+                <h1 class="hero-title">
+                    Empowering <span>Students & Faculty</span> Seamlessly.
+                </h1>
+                <p class="hero-desc">
+                    Access real-time attendance tracking, academic grade records, comprehensive analytical reporting, and administrator tools in one unified glassmorphic portal.
+                </p>
 
-            <!-- Role Selector Tabs -->
-            <div class="role-switcher">
-                <button type="button" class="role-btn active" id="btnAdmin" onclick="setRole('admin')">
-                    <i class="fas fa-user-shield"></i> Admin Login
-                </button>
-                <button type="button" class="role-btn" id="btnStudent" onclick="setRole('student')">
-                    <i class="fas fa-user-graduate"></i> Student Login
-                </button>
-            </div>
-
-            <!-- Login Form -->
-            <form action="/login" method="POST">
-                <input type="hidden" name="role" id="roleInput" value="admin">
-
-                <!-- Identifier Input -->
-                <div class="input-group">
-                    <label for="identifier" id="identifierLabel">Administrator Username</label>
-                    <div class="input-field-wrapper">
-                        <i class="fas fa-user lead-icon" id="identifierIcon"></i>
-                        <input type="text" id="identifier" name="identifier" class="glass-input" placeholder="Enter your username" required autofocus autocomplete="off">
+                <div class="hero-feature-cards">
+                    <div class="hero-feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Analytics Dashboard</h4>
+                        <p>Real-time performance stats and grade distributions.</p>
+                    </div>
+                    <div class="hero-feature-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <h4>Smart Attendance</h4>
+                        <p>Instant daily attendance logging & instant reporting.</p>
+                    </div>
+                    <div class="hero-feature-card">
+                        <i class="fas fa-user-shield"></i>
+                        <h4>Role Security</h4>
+                        <p>Granular administrator control and student read access.</p>
+                    </div>
+                    <div class="hero-feature-card">
+                        <i class="fas fa-feather-alt"></i>
+                        <h4>Ultra Glass UI</h4>
+                        <p>Sleek responsive interface with instant dark/light themes.</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Password Input -->
-                <div class="input-group">
-                    <label for="password">Security Password</label>
-                    <div class="input-field-wrapper">
-                        <i class="fas fa-lock lead-icon"></i>
-                        <input type="password" id="password" name="password" class="glass-input" placeholder="Enter your password" required>
-                        <i class="fas fa-eye toggle-icon" id="togglePassword" title="Toggle Password Visibility"></i>
+            <!-- Right Glass Authentication Card -->
+            <div class="glass-login-card">
+
+                <!-- Brand Header -->
+                <div class="login-brand">
+                    <div class="brand-icon-wrapper">
+                        🎓
                     </div>
+                    <h1>Welcome Back</h1>
+                    <p id="subheading"><i class="fas fa-shield-alt" style="color: #0ea5e9;"></i> Secure Administrator Portal</p>
                 </div>
 
-                <!-- Helpers -->
-                <div class="form-helpers">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember" checked>
-                        <span>Remember session</span>
-                    </label>
-                    <span class="hint-badge"><i class="fas fa-lock"></i> Protected</span>
+                <!-- Role Selector Tabs -->
+                <div class="role-switcher">
+                    <button type="button" class="role-btn active" id="btnAdmin" onclick="setRole('admin')">
+                        <i class="fas fa-user-shield"></i> Admin Login
+                    </button>
+                    <button type="button" class="role-btn" id="btnStudent" onclick="setRole('student')">
+                        <i class="fas fa-user-graduate"></i> Student Login
+                    </button>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-login-submit" id="btnSubmit">
-                    <span>Sign In to Admin Portal</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
+                <!-- Login Form -->
+                <form action="/login" method="POST">
+                    <input type="hidden" name="role" id="roleInput" value="admin">
 
-                <!-- Demo Credentials Info -->
-                <div class="demo-credentials-badge" id="demoBadge">
-                    <i class="fas fa-info-circle" style="color: #6c63ff; margin-right: 4px;"></i>
-                    <b>Admin Demo:</b> User: <code>admin</code> | Pass: <code>admin123</code><br>
-                    <small style="color: #64748b;">(Click Student Login tab for student account credentials)</small>
-                </div>
+                    <!-- Identifier Input -->
+                    <div class="input-group">
+                        <label for="identifier" id="identifierLabel">Administrator Username</label>
+                        <div class="input-field-wrapper">
+                            <i class="fas fa-user-shield lead-icon" id="identifierIcon"></i>
+                            <input type="text" id="identifier" name="identifier" class="glass-input" placeholder="Enter admin username (e.g. admin)" required autofocus autocomplete="off">
+                        </div>
+                    </div>
 
-            </form>
+                    <!-- Password Input -->
+                    <div class="input-group">
+                        <label for="password">Security Password</label>
+                        <div class="input-field-wrapper">
+                            <i class="fas fa-lock lead-icon"></i>
+                            <input type="password" id="password" name="password" class="glass-input" placeholder="Enter your password" required>
+                            <i class="fas fa-eye toggle-icon" id="togglePassword" title="Toggle Password Visibility"></i>
+                        </div>
+                    </div>
+
+                    <!-- CAPTCHA Verification Group (Student Login) -->
+                    <div class="input-group" id="captchaGroup" style="display: none;">
+                        <label for="captchaInput"><i class="fas fa-shield-virus" style="color: #0ea5e9;"></i> Security CAPTCHA Verification</label>
+                        <input type="hidden" name="captchaExpected" id="captchaExpected">
+                        <div class="captcha-wrapper">
+                            <div class="captcha-box">
+                                <canvas id="captchaCanvas" width="130" height="42" title="CAPTCHA Verification Code"></canvas>
+                                <button type="button" class="btn-refresh-captcha" onclick="generateCaptcha()" title="Refresh CAPTCHA Code">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="input-field-wrapper" style="flex: 1;">
+                                <i class="fas fa-key lead-icon"></i>
+                                <input type="text" id="captchaInput" name="captchaInput" class="glass-input" placeholder="Enter CAPTCHA" autocomplete="off">
+                            </div>
+                        </div>
+                        <div id="captchaError" class="captcha-error-msg" style="display: none;"></div>
+                    </div>
+
+                    <!-- Helpers -->
+                    <div class="form-helpers">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember" checked>
+                            <span>Remember session</span>
+                        </label>
+                        <span class="hint-badge"><i class="fas fa-lock"></i> Protected</span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-login-submit" id="btnSubmit">
+                        <span>Sign In to Admin Portal</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                    <!-- Demo Credentials Info -->
+                    <div class="demo-credentials-badge" id="demoBadge">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-right: 4px;"></i>
+                        <b>Admin Demo:</b> User: <code>admin</code> | Pass: <code>admin123</code><br>
+                        <small style="color: var(--text-muted);">(Click Student Login tab for student credentials)</small>
+                    </div>
+
+                </form>
+            </div>
+
         </div>
 
-        <div class="login-footer">
+        <!-- Footer -->
+        <footer class="login-footer">
             &copy; 2026 Student ERP System &bull; All Rights Reserved
-        </div>
+        </footer>
     </div>
 
-    <!-- Interactive Role & Password Script -->
+    <!-- Interactive Role, CAPTCHA & Password Script -->
     <script>
+        let currentCaptchaCode = "";
+
+        function generateCaptcha() {
+            const canvas = document.getElementById('captchaCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+            let code = "";
+            for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptchaCode = code;
+            document.getElementById('captchaExpected').value = code;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background gradient
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, 'rgba(14, 165, 233, 0.2)');
+            grad.addColorStop(1, 'rgba(37, 99, 235, 0.2)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Noise lines
+            for (let i = 0; i < 4; i++) {
+                ctx.strokeStyle = `rgba(14, 165, 233, ${0.3 + Math.random() * 0.3})`;
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            // Distorted text
+            ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+            ctx.textBaseline = 'middle';
+
+            for (let i = 0; i < code.length; i++) {
+                ctx.save();
+                const x = 14 + i * 23;
+                const y = canvas.height / 2 + (Math.random() * 6 - 3);
+                const angle = (Math.random() - 0.5) * 0.4;
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                
+                ctx.fillStyle = ['#0ea5e9', '#38bdf8', '#00e5ff', '#3b82f6', '#60a5fa'][i % 5];
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+                ctx.shadowBlur = 4;
+                ctx.fillText(code[i], 0, 0);
+                ctx.restore();
+            }
+
+            // Noise dots
+            for (let i = 0; i < 25; i++) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.4})`;
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+            }
+        }
+
         function setRole(role) {
             document.getElementById('roleInput').value = role;
             const btnAdmin = document.getElementById('btnAdmin');
@@ -138,6 +242,11 @@
             const btnSubmit = document.getElementById('btnSubmit');
             const subheading = document.getElementById('subheading');
             const demoBadge = document.getElementById('demoBadge');
+            const captchaGroup = document.getElementById('captchaGroup');
+            const captchaInput = document.getElementById('captchaInput');
+            const captchaError = document.getElementById('captchaError');
+
+            captchaError.style.display = 'none';
 
             if (role === 'admin') {
                 btnAdmin.classList.add('active');
@@ -146,8 +255,11 @@
                 identifierInput.placeholder = "Enter admin username (e.g. admin)";
                 identifierIcon.className = "fas fa-user-shield lead-icon";
                 btnSubmit.querySelector('span').innerText = "Sign In to Admin Portal";
-                subheading.innerHTML = '<i class="fas fa-shield-alt" style="color: #6c63ff;"></i> Secure Administrator Portal';
-                demoBadge.innerHTML = '<i class="fas fa-key" style="color: #6c63ff; margin-right: 4px;"></i> <b>Admin Access:</b> Username: <code>admin</code> | Password: <code>admin123</code>';
+                subheading.innerHTML = '<i class="fas fa-shield-alt" style="color: #0ea5e9;"></i> Secure Administrator Portal';
+                demoBadge.innerHTML = '<i class="fas fa-key" style="color: #0ea5e9; margin-right: 4px;"></i> <b>Admin Access:</b> Username: <code>admin</code> | Password: <code>admin123</code>';
+                
+                captchaGroup.style.display = 'none';
+                captchaInput.removeAttribute('required');
             } else {
                 btnStudent.classList.add('active');
                 btnAdmin.classList.remove('active');
@@ -157,8 +269,31 @@
                 btnSubmit.querySelector('span').innerText = "Sign In to Student Portal";
                 subheading.innerHTML = '<i class="fas fa-user-graduate" style="color: #00e5ff;"></i> Read-Only Student Portal';
                 demoBadge.innerHTML = '<i class="fas fa-graduation-cap" style="color: #00e5ff; margin-right: 4px;"></i> <b>Student Access:</b> ID: <code>student</code> | Password: <code>123</code> (or Roll: <code>CS-101</code>)';
+                
+                captchaGroup.style.display = 'block';
+                captchaInput.setAttribute('required', 'required');
+                generateCaptcha();
             }
         }
+
+        // Form Submit CAPTCHA Validation
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const role = document.getElementById('roleInput').value;
+            if (role === 'student') {
+                const inputVal = document.getElementById('captchaInput').value.trim();
+                const errorDiv = document.getElementById('captchaError');
+                if (inputVal.toUpperCase() !== currentCaptchaCode.toUpperCase()) {
+                    e.preventDefault();
+                    errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Incorrect CAPTCHA code. Please try again.';
+                    errorDiv.style.display = 'flex';
+                    document.getElementById('captchaInput').value = '';
+                    document.getElementById('captchaInput').focus();
+                    generateCaptcha();
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            }
+        });
 
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
