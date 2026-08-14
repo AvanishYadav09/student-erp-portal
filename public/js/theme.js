@@ -210,8 +210,8 @@
         function getThemeGlowColor() {
             const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
             const colors = isDark 
-                ? ['0, 229, 255', '192, 132, 252', '244, 63, 94', '59, 130, 246']
-                : ['56, 189, 248', '139, 92, 246', '245, 158, 11', '16, 185, 129'];
+                ? ['255, 30, 86', '168, 85, 247', '236, 72, 153', '244, 63, 94', '192, 132, 252']
+                : ['225, 29, 72', '147, 51, 234', '219, 39, 119', '192, 38, 211', '244, 114, 182'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
@@ -281,13 +281,13 @@
         function drawLiquidWaves() {
             const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
             const waveConfigs = isDark ? [
-                { color: 'rgba(0, 229, 255, 0.06)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
-                { color: 'rgba(192, 132, 252, 0.05)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
-                { color: 'rgba(244, 63, 94, 0.04)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
+                { color: 'rgba(255, 30, 86, 0.07)', speed: 0.008, freq: 0.004, amp: 45, yOffset: height * 0.65 },
+                { color: 'rgba(168, 85, 247, 0.08)', speed: 0.012, freq: 0.006, amp: 60, yOffset: height * 0.5 },
+                { color: 'rgba(236, 72, 153, 0.07)', speed: 0.006, freq: 0.003, amp: 50, yOffset: height * 0.75 }
             ] : [
-                { color: 'rgba(56, 189, 248, 0.08)', speed: 0.008, freq: 0.004, amp: 40, yOffset: height * 0.65 },
-                { color: 'rgba(139, 92, 246, 0.06)', speed: 0.012, freq: 0.005, amp: 55, yOffset: height * 0.5 },
-                { color: 'rgba(244, 114, 182, 0.05)', speed: 0.006, freq: 0.003, amp: 45, yOffset: height * 0.75 }
+                { color: 'rgba(225, 29, 72, 0.08)', speed: 0.008, freq: 0.004, amp: 40, yOffset: height * 0.65 },
+                { color: 'rgba(147, 51, 234, 0.07)', speed: 0.012, freq: 0.005, amp: 55, yOffset: height * 0.5 },
+                { color: 'rgba(219, 39, 119, 0.06)', speed: 0.006, freq: 0.003, amp: 45, yOffset: height * 0.75 }
             ];
 
             waveConfigs.forEach(wave => {

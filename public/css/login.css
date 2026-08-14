@@ -9,28 +9,28 @@
     --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    --bg-main: #f8fafc;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
+    --bg-main: #fdf4ff;
+    --text-primary: #2b0038;
+    --text-secondary: #701a75;
+    --text-muted: #9d174d;
     
-    --login-card-bg: rgba(255, 255, 255, 0.92);
-    --login-card-border: rgba(255, 255, 255, 1);
-    --login-card-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+    --login-card-bg: rgba(255, 255, 255, 0.94);
+    --login-card-border: rgba(236, 72, 153, 0.3);
+    --login-card-shadow: 0 20px 50px rgba(225, 29, 72, 0.12);
     
-    --input-bg: rgba(241, 245, 249, 0.9);
-    --input-border: rgba(203, 213, 225, 0.8);
-    --input-color: #0f172a;
+    --input-bg: rgba(253, 242, 248, 0.95);
+    --input-border: rgba(244, 114, 182, 0.4);
+    --input-color: #2b0038;
     
-    --hero-card-bg: rgba(255, 255, 255, 0.85);
-    --hero-card-border: rgba(255, 255, 255, 0.95);
+    --hero-card-bg: rgba(255, 255, 255, 0.88);
+    --hero-card-border: rgba(236, 72, 153, 0.25);
     
-    --aurora-1: rgba(56, 189, 248, 0.5);
-    --aurora-2: rgba(168, 85, 247, 0.4);
-    --aurora-3: rgba(244, 114, 182, 0.35);
+    --aurora-1: rgba(225, 29, 72, 0.4);
+    --aurora-2: rgba(168, 85, 247, 0.35);
+    --aurora-3: rgba(236, 72, 153, 0.3);
     
-    --theme-btn-bg: rgba(255, 255, 255, 0.9);
-    --theme-btn-border: rgba(255, 255, 255, 1);
+    --theme-btn-bg: rgba(255, 255, 255, 0.95);
+    --theme-btn-border: rgba(236, 72, 153, 0.4);
 }
 
 /* Smooth Page Theme Interpolation Engine */
@@ -145,28 +145,28 @@ html.theme-transitioning *:after {
 }
 
 [data-theme="dark"] {
-    --bg-main: #0b1329;
+    --bg-main: #0a0414;
     --text-primary: #ffffff;
-    --text-secondary: #9aa4c5;
-    --text-muted: #64748b;
+    --text-secondary: #e2d4f0;
+    --text-muted: #a88abf;
     
-    --login-card-bg: rgba(15, 23, 42, 0.85);
-    --login-card-border: rgba(255, 255, 255, 0.16);
-    --login-card-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    --login-card-bg: rgba(22, 9, 38, 0.88);
+    --login-card-border: rgba(236, 72, 153, 0.25);
+    --login-card-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
     
-    --input-bg: rgba(30, 41, 59, 0.9);
-    --input-border: rgba(255, 255, 255, 0.14);
+    --input-bg: rgba(36, 14, 60, 0.9);
+    --input-border: rgba(244, 114, 182, 0.25);
     --input-color: #ffffff;
     
-    --hero-card-bg: rgba(30, 41, 59, 0.6);
-    --hero-card-border: rgba(255, 255, 255, 0.12);
+    --hero-card-bg: rgba(36, 14, 60, 0.65);
+    --hero-card-border: rgba(236, 72, 153, 0.2);
     
-    --aurora-1: rgba(14, 165, 233, 0.38);
-    --aurora-2: rgba(0, 229, 255, 0.3);
-    --aurora-3: rgba(244, 114, 182, 0.25);
+    --aurora-1: rgba(255, 30, 86, 0.45);
+    --aurora-2: rgba(168, 85, 247, 0.45);
+    --aurora-3: rgba(236, 72, 153, 0.4);
     
-    --theme-btn-bg: rgba(30, 41, 59, 0.9);
-    --theme-btn-border: rgba(255, 255, 255, 0.2);
+    --theme-btn-bg: rgba(36, 14, 60, 0.92);
+    --theme-btn-border: rgba(236, 72, 153, 0.35);
 }
 
 * {
@@ -433,7 +433,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #38bdf8, #0284c7, #818cf8);
+    background: linear-gradient(90deg, #ff1e56, #a855f7, #ec4899);
 }
 
 .login-brand {
@@ -445,20 +445,20 @@ body {
     width: 68px;
     height: 68px;
     margin: 0 auto 16px;
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    background: linear-gradient(135deg, #ff1e56, #a855f7);
     border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 32px;
     color: #fff;
-    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
+    box-shadow: 0 10px 25px rgba(255, 30, 86, 0.4);
     animation: pulseIcon 3s infinite alternate;
 }
 
 @keyframes pulseIcon {
-    0% { transform: scale(1); box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3); }
-    100% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(2, 132, 199, 0.45); }
+    0% { transform: scale(1); box-shadow: 0 10px 25px rgba(255, 30, 86, 0.4); }
+    100% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.55); }
 }
 
 .login-brand h1 {
@@ -506,9 +506,9 @@ body {
 }
 
 .role-btn.active {
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    background: linear-gradient(135deg, #ff1e56, #a855f7);
     color: #fff;
-    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+    box-shadow: 0 4px 18px rgba(255, 30, 86, 0.4);
 }
 
 /* Inputs & Form */
@@ -668,7 +668,7 @@ body {
 .btn-login-submit {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    background: linear-gradient(135deg, #ff1e56, #9333ea, #ec4899);
     color: #fff;
     border: none;
     border-radius: 14px;
@@ -679,13 +679,13 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 8px 25px rgba(2, 132, 199, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 30, 86, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-login-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(2, 132, 199, 0.45);
+    box-shadow: 0 12px 32px rgba(255, 30, 86, 0.55), 0 0 20px rgba(236, 72, 153, 0.4);
 }
 
 .demo-credentials-badge {
