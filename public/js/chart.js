@@ -59,16 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     {
                         label: "Present",
                         data: [Math.max(1, presVal - 2), Math.max(1, presVal - 3), presVal + 1, Math.max(1, presVal - 1), presVal + 2, presVal, presVal],
-                        borderColor: "#00ff88",
-                        backgroundColor: "rgba(0,255,136,.18)",
+                        borderColor: "#10b981",
+                        backgroundColor: "rgba(16, 185, 129, 0.15)",
                         fill: true,
                         tension: 0.4
                     },
                     {
                         label: "Absent",
                         data: [absVal, Math.max(0, absVal + 1), absVal, Math.max(0, absVal - 1), absVal + 1, absVal, Math.max(0, absVal - 1)],
-                        borderColor: "#ff3b5c",
-                        backgroundColor: "rgba(255,59,92,.15)",
+                        borderColor: "#f43f5e",
+                        backgroundColor: "rgba(244, 63, 94, 0.15)",
                         fill: true,
                         tension: 0.4
                     }

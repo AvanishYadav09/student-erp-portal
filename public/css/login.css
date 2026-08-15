@@ -9,28 +9,28 @@
     --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    --bg-main: #fef2f2;
-    --text-primary: #180509;
-    --text-secondary: #881337;
-    --text-muted: #9f1239;
+    --bg-main: #f8fafc;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
     
-    --login-card-bg: rgba(255, 255, 255, 0.95);
-    --login-card-border: rgba(225, 29, 72, 0.35);
-    --login-card-shadow: 0 20px 50px rgba(225, 29, 72, 0.15);
+    --login-card-bg: rgba(255, 255, 255, 0.92);
+    --login-card-border: rgba(203, 213, 225, 0.7);
+    --login-card-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
     
-    --input-bg: rgba(254, 242, 242, 0.95);
-    --input-border: rgba(244, 63, 94, 0.4);
-    --input-color: #180509;
+    --input-bg: rgba(241, 245, 249, 0.85);
+    --input-border: rgba(203, 213, 225, 0.8);
+    --input-color: #0f172a;
     
-    --hero-card-bg: rgba(255, 255, 255, 0.9);
-    --hero-card-border: rgba(225, 29, 72, 0.3);
+    --hero-card-bg: rgba(255, 255, 255, 0.88);
+    --hero-card-border: rgba(226, 232, 240, 0.9);
     
-    --aurora-1: rgba(255, 0, 60, 0.4);
-    --aurora-2: rgba(220, 38, 38, 0.35);
-    --aurora-3: rgba(185, 28, 28, 0.3);
+    --aurora-1: rgba(56, 189, 248, 0.35);
+    --aurora-2: rgba(129, 140, 248, 0.3);
+    --aurora-3: rgba(192, 132, 252, 0.25);
     
-    --theme-btn-bg: rgba(255, 255, 255, 0.95);
-    --theme-btn-border: rgba(225, 29, 72, 0.4);
+    --theme-btn-bg: rgba(255, 255, 255, 0.92);
+    --theme-btn-border: rgba(203, 213, 225, 0.8);
 }
 
 /* Optimized Theme Transition Engine */
@@ -61,7 +61,7 @@ html.theme-transitioning .theme-toggle-btn {
     font-size: 13px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
     transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     user-select: none;
@@ -72,8 +72,8 @@ html.theme-transitioning .theme-toggle-btn {
 
 .theme-toggle-btn:hover {
     transform: translateY(-2px) scale(1.04);
-    border-color: #0284c7;
-    box-shadow: 0 10px 28px rgba(2, 132, 199, 0.28), 0 0 15px rgba(56, 189, 248, 0.3);
+    border-color: #3b82f6;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.22);
 }
 
 .theme-toggle-btn:active {
@@ -96,13 +96,13 @@ html.theme-transitioning .theme-toggle-btn {
     justify-content: center;
     color: #ffffff;
     font-size: 13px;
-    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.45);
+    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.4);
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 [data-theme="dark"] .theme-icon-box {
-    background: linear-gradient(135deg, #ff003c, #b91c1c);
-    box-shadow: 0 3px 14px rgba(255, 0, 60, 0.55);
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    box-shadow: 0 3px 14px rgba(168, 85, 247, 0.45);
 }
 
 .theme-toggle-btn:hover .theme-icon-box {
@@ -134,41 +134,41 @@ html.theme-transitioning .theme-toggle-btn {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ff003c, #b91c1c);
-    box-shadow: 0 2px 8px rgba(255, 0, 60, 0.5);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.35s ease;
     transform: translateX(0);
 }
 
 [data-theme="dark"] .theme-toggle-knob {
     transform: translateX(16px);
-    background: linear-gradient(135deg, #ff003c, #991b1b);
-    box-shadow: 0 2px 8px rgba(255, 0, 60, 0.6);
+    background: linear-gradient(135deg, #c084fc, #7c3aed);
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.5);
 }
 
 [data-theme="dark"] {
-    --bg-main: #060205;
-    --text-primary: #ffffff;
-    --text-secondary: #fecdd3;
-    --text-muted: #fda4af;
+    --bg-main: #0b0f19;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
     
-    --login-card-bg: rgba(18, 6, 12, 0.92);
-    --login-card-border: rgba(255, 0, 60, 0.3);
-    --login-card-shadow: 0 25px 60px rgba(255, 0, 60, 0.25);
+    --login-card-bg: rgba(23, 32, 51, 0.85);
+    --login-card-border: rgba(51, 65, 85, 0.6);
+    --login-card-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
     
-    --input-bg: rgba(30, 8, 18, 0.92);
-    --input-border: rgba(255, 0, 60, 0.3);
+    --input-bg: rgba(15, 23, 42, 0.85);
+    --input-border: rgba(51, 65, 85, 0.7);
     --input-color: #ffffff;
     
-    --hero-card-bg: rgba(30, 8, 18, 0.7);
-    --hero-card-border: rgba(255, 0, 60, 0.25);
+    --hero-card-bg: rgba(23, 32, 51, 0.7);
+    --hero-card-border: rgba(51, 65, 85, 0.6);
     
-    --aurora-1: rgba(255, 0, 60, 0.5);
-    --aurora-2: rgba(220, 38, 38, 0.45);
-    --aurora-3: rgba(185, 28, 28, 0.4);
+    --aurora-1: rgba(56, 189, 248, 0.3);
+    --aurora-2: rgba(129, 140, 248, 0.25);
+    --aurora-3: rgba(192, 132, 252, 0.2);
     
-    --theme-btn-bg: rgba(30, 8, 18, 0.95);
-    --theme-btn-border: rgba(255, 0, 60, 0.35);
+    --theme-btn-bg: rgba(15, 23, 42, 0.9);
+    --theme-btn-border: rgba(51, 65, 85, 0.7);
 }
 
 * {
@@ -531,9 +531,9 @@ body {
 }
 
 .role-btn.active {
-    background: linear-gradient(135deg, #ff003c, #b91c1c);
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
     color: #fff;
-    box-shadow: 0 4px 18px rgba(255, 0, 60, 0.45);
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
 }
 
 /* Inputs & Form */
@@ -574,7 +574,7 @@ body {
 }
 
 .input-field-wrapper i.toggle-icon:hover {
-    color: #ff1e56;
+    color: #3b82f6;
 }
 
 .glass-input {
@@ -597,21 +597,21 @@ body {
 }
 
 .glass-input:focus {
-    border-color: #ff1e56;
-    background: rgba(42, 16, 70, 0.95);
+    border-color: #6366f1;
+    background: rgba(15, 23, 42, 0.95);
     color: #ffffff !important;
-    box-shadow: 0 0 22px rgba(255, 30, 86, 0.35), 0 0 0 2px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 22px rgba(99, 102, 241, 0.3), 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 [data-theme="light"] .glass-input:focus {
     background: #ffffff;
-    color: #2b0038 !important;
-    border-color: #e11d48;
-    box-shadow: 0 0 22px rgba(225, 29, 72, 0.3), 0 0 0 2px rgba(236, 72, 153, 0.25);
+    color: #0f172a !important;
+    border-color: #4f46e5;
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.2), 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 .input-field-wrapper:focus-within i.lead-icon {
-    color: #ff1e56;
+    color: #4f46e5;
 }
 
 /* CAPTCHA Component Styles */
@@ -703,7 +703,7 @@ body {
 .btn-login-submit {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #ff003c, #dc2626, #991b1b);
+    background: linear-gradient(135deg, #3b82f6, #4f46e5, #6366f1);
     color: #fff;
     border: none;
     border-radius: 14px;
@@ -714,13 +714,13 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 8px 25px rgba(255, 0, 60, 0.45);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-login-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(255, 0, 60, 0.65), 0 0 25px rgba(220, 38, 38, 0.5);
+    box-shadow: 0 12px 32px rgba(79, 70, 229, 0.5), 0 0 20px rgba(99, 102, 241, 0.4);
 }
 
 .demo-credentials-badge {
