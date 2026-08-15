@@ -90,15 +90,25 @@ app.post("/login", async (req, res) => {
         let studentRow = null;
 
         if (identifier) {
+            const parsedId = parseInt(identifier, 10);
             studentRow = await db.getAsync(
-                "SELECT * FROM students WHERE LOWER(TRIM(roll)) = LOWER(TRIM(?)) OR LOWER(TRIM(name)) = LOWER(TRIM(?))",
-                [identifier, identifier]
+                "SELECT * FROM students WHERE id = ? OR LOWER(TRIM(roll)) = LOWER(TRIM(?)) OR LOWER(TRIM(name)) = LOWER(TRIM(?))",
+                [isNaN(parsedId) ? -1 : parsedId, identifier, identifier]
             );
         }
 
-        // Fallback to first student if identifier is generic
-        if (!studentRow) {
+        // Fallback to demo student ONLY if identifier is empty or explicitly 'student'
+        if (!studentRow && (!identifier || identifier.toLowerCase() === 'student')) {
             studentRow = await db.getAsync("SELECT * FROM students ORDER BY id ASC LIMIT 1");
+        }
+
+        if (!studentRow) {
+            return res.send(`
+                <script>
+                    alert("No student account found matching '${identifier}'. Please check the Student ID or Roll Number.");
+                    window.location.href = "/";
+                </script>
+            `);
         }
 
         // If no student exists in DB, seed Alex Morgan safely

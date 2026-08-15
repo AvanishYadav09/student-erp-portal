@@ -11,8 +11,19 @@ router.get("/students", requireAuth, async (req, res) => {
         let params = [];
 
         if (search) {
-            sql = "SELECT * FROM students WHERE LOWER(name) LIKE LOWER(?) OR LOWER(roll) LIKE LOWER(?) OR LOWER(branch) LIKE LOWER(?) ORDER BY id DESC";
-            params = ['%' + search + '%', '%' + search + '%', '%' + search + '%'];
+            const parsedId = parseInt(search, 10);
+            sql = `
+                SELECT * FROM students 
+                WHERE id = ? 
+                   OR LOWER(name) LIKE LOWER(?) 
+                   OR LOWER(roll) LIKE LOWER(?) 
+                   OR LOWER(branch) LIKE LOWER(?) 
+                   OR LOWER(semester) LIKE LOWER(?)
+                   OR LOWER(phone) LIKE LOWER(?)
+                ORDER BY id DESC
+            `;
+            const term = '%' + search + '%';
+            params = [isNaN(parsedId) ? -1 : parsedId, term, term, term, term, term];
         }
 
         const rows = await db.allAsync(sql, params);

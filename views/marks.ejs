@@ -106,8 +106,8 @@
                             <select name="student_id" id="studentSelectDropdown" class="glass-select" required>
                                 <% if (students && students.length) { %>
                                     <% students.forEach(student => { %>
-                                        <option value="<%= student.id %>" data-search="<%= (student.name + ' ' + (student.roll || '') + ' ' + (student.branch || '')).toLowerCase() %>">
-                                            <%= student.name %> (<%= student.branch %> - <%= student.roll %>)
+                                        <option value="<%= student.id %>" data-search="<%= (student.id + ' #' + student.id + ' ' + student.name + ' ' + (student.roll || '') + ' ' + (student.branch || '')).toLowerCase() %>">
+                                            #<%= student.id %> - <%= student.name %> (<%= student.branch %> | Roll: <%= student.roll %>)
                                         </option>
                                     <% }) %>
                                 <% } else { %>
