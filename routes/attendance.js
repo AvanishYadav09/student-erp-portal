@@ -3,26 +3,51 @@ const router = express.Router();
 const db = require("../database/db");
 const { requireAuth, requireAdmin } = require("../middleware/auth");
 
-// Show Attendance Page
+// Show Attendance Page with optional date selection
 router.get("/attendance", requireAuth, async (req, res) => {
     try {
-        const rows = await db.allAsync("SELECT * FROM students");
-        res.render("attendance", { user: req.session.user, students: rows });
+        const todayStr = new Date().toISOString().split('T')[0];
+        const selectedDate = (req.query.date || todayStr).trim();
+        const students = await db.allAsync("SELECT * FROM students ORDER BY name ASC");
+
+        // Fetch existing attendance logs for the selected date
+        const attendanceRows = await db.allAsync("SELECT student_id, status FROM attendance WHERE date = ?", [selectedDate]);
+        
+        // Build map of student_id -> status ('Present' | 'Absent')
+        const attendanceMap = {};
+        attendanceRows.forEach(row => {
+            attendanceMap[row.student_id] = row.status;
+        });
+
+        res.render("attendance", { 
+            user: req.session.user, 
+            students, 
+            selectedDate, 
+            attendanceMap 
+        });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        console.error("Error loading attendance page:", err);
+        res.status(500).send("Server Error: " + err.message);
     }
 });
 
-// Save Attendance (Admin Only)
+// Save Attendance Register (Admin Only)
 router.post("/attendance/save", requireAuth, requireAdmin, async (req, res) => {
     try {
-        const date = req.body.date || new Date().toISOString().split('T')[0];
-        const status = req.body.status || {};
+        const todayStr = new Date().toISOString().split('T')[0];
+        const date = (req.body.date || todayStr).trim();
+        const statusObj = req.body.status || {};
 
-        for (let studentId in status) {
-            const studentStatus = status[studentId];
-            if (!studentStatus) continue;
+        let presentCount = 0;
+        let absentCount = 0;
+
+        for (let studentIdStr in statusObj) {
+            const studentId = parseInt(studentIdStr, 10);
+            const studentStatus = statusObj[studentIdStr];
+            if (isNaN(studentId) || !studentStatus) continue;
+
+            if (studentStatus === 'Present') presentCount++;
+            else if (studentStatus === 'Absent') absentCount++;
 
             const existing = await db.getAsync(
                 "SELECT id FROM attendance WHERE student_id = ? AND date = ?",
@@ -42,10 +67,13 @@ router.post("/attendance/save", requireAuth, requireAdmin, async (req, res) => {
             }
         }
 
-        res.redirect("/reports");
+        const totalSaved = presentCount + absentCount;
+        req.flash('success', `Attendance successfully saved for ${totalSaved} student(s) on ${date} (${presentCount} Present, ${absentCount} Absent).`);
+        res.redirect(`/attendance?date=${date}`);
     } catch (err) {
-        console.error("Error saving attendance:", err);
-        res.status(500).send("Server Error");
+        console.error("Error saving attendance register:", err);
+        req.flash('danger', 'Failed to save attendance register: ' + err.message);
+        res.redirect("/attendance");
     }
 });
 

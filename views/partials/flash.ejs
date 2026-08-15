@@ -1,0 +1,84 @@
+<% if (locals.flash) { %>
+    <div class="flash-toast flash-<%= locals.flash.type || 'info' %>" id="flashToastAlert">
+        <div class="flash-toast-content">
+            <i class="fas <%= locals.flash.type === 'success' ? 'fa-check-circle' : (locals.flash.type === 'danger' ? 'fa-exclamation-triangle' : 'fa-info-circle') %>"></i>
+            <span><%= locals.flash.message %></span>
+        </div>
+        <button type="button" class="flash-toast-close" onclick="document.getElementById('flashToastAlert').remove();" aria-label="Close notification">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <style>
+        .flash-toast {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            animation: slideDownToast 0.4s ease forwards;
+            position: relative;
+            z-index: 100;
+        }
+
+        @keyframes slideDownToast {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash-toast-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .flash-toast-content i {
+            font-size: 18px;
+        }
+
+        .flash-success {
+            background: rgba(0, 230, 118, 0.15);
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            color: #00e676;
+        }
+
+        .flash-danger {
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.4);
+            color: #ff5252;
+        }
+
+        .flash-info {
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.4);
+            color: #38bdf8;
+        }
+
+        .flash-toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.75;
+            transition: opacity 0.2s ease;
+            padding: 4px 8px;
+        }
+
+        .flash-toast-close:hover {
+            opacity: 1;
+        }
+    </style>
+<% } %>

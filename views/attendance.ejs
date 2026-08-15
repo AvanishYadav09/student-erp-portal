@@ -64,14 +64,34 @@
                 </div>
             </div>
 
+            <!-- Flash Notification Banner -->
+            <%- include('partials/flash') %>
+
             <!-- Attendance Marking Form Glass Card -->
             <div class="glass-card">
-                <form action="/attendance/save" method="POST">
-                    <div class="glass-card-header">
-                        <h3><i class="fas fa-calendar-check" style="color: #0ea5e9;"></i> Daily Attendance Register</h3>
-                        <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
-                            <label><i class="fas fa-calendar-day"></i> Select Date:</label>
-                            <input type="date" name="date" class="glass-input" style="width: auto;" required value="<%= new Date().toISOString().split('T')[0] %>">
+                <form action="/attendance/save" method="POST" id="attendanceForm">
+                    <div class="glass-card-header" style="flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h3><i class="fas fa-calendar-check" style="color: #0ea5e9;"></i> Daily Attendance Register</h3>
+                            <span style="color: #9aa4c5; font-size: 13px;">Mark & view student attendance logs by date</span>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px; margin: 0;">
+                                <label style="margin: 0; white-space: nowrap;"><i class="fas fa-calendar-day"></i> Select Date:</label>
+                                <input type="date" name="date" class="glass-input" style="width: auto; padding: 8px 14px;" required value="<%= typeof selectedDate !== 'undefined' ? selectedDate : new Date().toISOString().split('T')[0] %>" onchange="window.location.href='/attendance?date='+this.value">
+                            </div>
+
+                            <% if (locals.user && locals.user.role === 'admin' && students && students.length) { %>
+                                <div style="display: flex; gap: 6px;">
+                                    <button type="button" class="btn-glow btn-success-glow btn-sm" onclick="markAll('Present')" title="Set all to Present">
+                                        <i class="fas fa-check-double"></i> All Present
+                                    </button>
+                                    <button type="button" class="btn-glow btn-danger-glow btn-sm" onclick="markAll('Absent')" title="Set all to Absent">
+                                        <i class="fas fa-times-circle"></i> All Absent
+                                    </button>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
 
@@ -88,6 +108,11 @@
                             <tbody>
                                 <% if (students && students.length) { %>
                                     <% students.forEach(student => { %>
+                                        <% 
+                                            const currentStatus = (typeof attendanceMap !== 'undefined' && attendanceMap[student.id]) 
+                                                ? attendanceMap[student.id] 
+                                                : 'Present';
+                                        %>
                                         <tr>
                                             <td style="color: #0ea5e9; font-weight: bold;">#<%= student.id %></td>
                                             <td>
@@ -104,12 +129,12 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <div class="radio-toggle" style="justify-content: center;">
-                                                    <label style="background: rgba(0, 230, 118, .1); border-color: rgba(0, 230, 118, .3); color: #00e676;">
-                                                        <input type="radio" name="status[<%= student.id %>]" value="Present" required checked>
+                                                    <label style="background: rgba(0, 230, 118, .1); border-color: rgba(0, 230, 118, .3); color: #00e676; cursor: pointer;">
+                                                        <input type="radio" class="status-radio-present" name="status[<%= student.id %>]" value="Present" required <%= currentStatus === 'Present' ? 'checked' : '' %>>
                                                         <i class="fas fa-check"></i> Present
                                                     </label>
-                                                    <label style="background: rgba(255, 82, 82, .1); border-color: rgba(255, 82, 82, .3); color: #ff5252;">
-                                                        <input type="radio" name="status[<%= student.id %>]" value="Absent">
+                                                    <label style="background: rgba(255, 82, 82, .1); border-color: rgba(255, 82, 82, .3); color: #ff5252; cursor: pointer;">
+                                                        <input type="radio" class="status-radio-absent" name="status[<%= student.id %>]" value="Absent" <%= currentStatus === 'Absent' ? 'checked' : '' %>>
                                                         <i class="fas fa-times"></i> Absent
                                                     </label>
                                                 </div>
@@ -141,6 +166,16 @@
                     </div>
                 </form>
             </div>
+
+            <script>
+                function markAll(status) {
+                    if (status === 'Present') {
+                        document.querySelectorAll('.status-radio-present').forEach(r => r.checked = true);
+                    } else if (status === 'Absent') {
+                        document.querySelectorAll('.status-radio-absent').forEach(r => r.checked = true);
+                    }
+                }
+            </script>
 
         </main>
     </div>
