@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
 
@@ -8,9 +8,12 @@
 
     <title>Dashboard</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="/js/theme.js"></script>
 </head>
 
 <body>
@@ -21,16 +24,16 @@
         <aside class="sidebar">
 
             <div class="logo">
-                <h2>🎓 ERP Portal</h2>
+                <h2><i class="fas fa-graduation-cap"></i> ERP Portal</h2>
             </div>
 
             <ul class="menu">
-                <li class="active"><a href="/dashboard">🏠 Dashboard</a></li>
-                <li><a href="/students">👨‍🎓 Students</a></li>
-                <li><a href="/attendance">📅 Attendance</a></li>
-                <li><a href="/marks">📝 Marks</a></li>
-                <li><a href="/reports">📊 Reports</a></li>
-                <li><a href="/logout">🚪 Logout</a></li>
+                <li class="active"><a href="/dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="/students"><i class="fas fa-user-graduate"></i> Students</a></li>
+                <li><a href="/attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="/marks"><i class="fas fa-award"></i> Marks</a></li>
+                <li><a href="/reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
 
         </aside>
@@ -43,7 +46,7 @@
 
                 <div class="header-left">
                     <h1>Dashboard</h1>
-                    <p>Welcome back, <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %> 👋</p>
+                    <p>Welcome back, <%= (locals.user && locals.user.name) ? locals.user.name : 'User' %></p>
                 </div>
 
                 <div class="header-right">
@@ -52,6 +55,11 @@
                         <i class="fas fa-search"></i>
                         <input type="text" placeholder="Search portal...">
                     </div>
+
+                    <button type="button" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-label">Dark</span>
+                    </button>
 
                     <div class="header-icon">
                         <i class="fas fa-bell"></i>
@@ -134,7 +142,7 @@
 
             <!-- Welcome -->
             <div class="welcome">
-                <h2>Welcome to Student ERP Portal 🚀</h2>
+                <h2>Welcome to Student ERP Portal</h2>
                 <p>
                     <% if (locals.user && locals.user.role==='student' ) { %>
                         View your personal attendance logs, subject scores, and academic status in read-only mode.
@@ -149,14 +157,14 @@
 
                 <h2>Attendance Overview</h2>
 
-                <canvas id="attendanceChart"></canvas>
+                <canvas id="attendanceChart" data-present="<%= presentToday %>" data-absent="<%= absentToday %>"></canvas>
 
             </div>
             <div class="analytics">
 
                 <div class="performance-card">
 
-                    <h2>📊 Monthly Performance</h2>
+                    <h2><i class="fas fa-chart-line"></i> Monthly Performance</h2>
 
                     <canvas id="performanceChart"></canvas>
 
@@ -169,12 +177,12 @@
                     <div class="circle">
 
                         <div class="inner">
-                            87%
+                            <%= (presentToday + absentToday) > 0 ? Math.round((presentToday / (presentToday + absentToday)) * 100) : 87 %>%
                         </div>
 
                     </div>
 
-                    <p>Overall Attendance</p>
+                    <p>Overall Attendance Rate</p>
 
                 </div>
 
@@ -186,31 +194,31 @@
                     <h2>Recent Activities</h2>
 
                     <div class="activity">
-                        <span>👨‍🎓 New student added</span>
+                        <span><i class="fas fa-user-plus"></i> New student registered</span>
                         <small>2 min ago</small>
                     </div>
                     <div class="quick-actions">
 
                         <div class="action-card">
-                            <div class="icon">👨‍🎓</div>
+                            <div class="icon"><i class="fas fa-user-graduate"></i></div>
                             <h3>Add Student</h3>
                             <a href="/students">Open</a>
                         </div>
 
                         <div class="action-card">
-                            <div class="icon">📅</div>
+                            <div class="icon"><i class="fas fa-calendar-check"></i></div>
                             <h3>Attendance</h3>
                             <a href="/attendance">Open</a>
                         </div>
 
                         <div class="action-card">
-                            <div class="icon">📝</div>
+                            <div class="icon"><i class="fas fa-award"></i></div>
                             <h3>Marks</h3>
                             <a href="/marks">Open</a>
                         </div>
 
                         <div class="action-card">
-                            <div class="icon">📊</div>
+                            <div class="icon"><i class="fas fa-chart-line"></i></div>
                             <h3>Reports</h3>
                             <a href="/reports">Open</a>
                         </div>
@@ -218,17 +226,17 @@
                     </div>
 
                     <div class="activity">
-                        <span>✅ Attendance Updated</span>
+                        <span><i class="fas fa-check-circle"></i> Attendance Updated</span>
                         <small>15 min ago</small>
                     </div>
 
                     <div class="activity">
-                        <span>📝 Marks Uploaded</span>
+                        <span><i class="fas fa-file-alt"></i> Marks Uploaded</span>
                         <small>1 hour ago</small>
                     </div>
 
                     <div class="activity">
-                        <span>📊 Report Generated</span>
+                        <span><i class="fas fa-chart-bar"></i> Report Generated</span>
                         <small>Today</small>
                     </div>
 
@@ -236,12 +244,12 @@
 
                 <div class="top-card">
 
-                    <h2>🏆 Top Performers</h2>
+                    <h2><i class="fas fa-trophy"></i> Top Performers</h2>
 
                     <% if (topStudents && topStudents.length) { %>
                         <% topStudents.forEach(student=> { %>
                             <div class="student">
-                                <span>🏅 <%= student.name %></span>
+                                <span><i class="fas fa-medal"></i> <%= student.name %></span>
                                 <b>
                                     <%= student.total %>%
                                 </b>
@@ -258,7 +266,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/css/js/chart.js"></script>
+    <script src="/js/chart.js"></script>
 
 </body>
 
