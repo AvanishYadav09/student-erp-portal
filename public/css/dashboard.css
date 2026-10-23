@@ -111,10 +111,10 @@ body {
 body::before {
     content: "";
     position: fixed;
-    top: -25%;
-    left: -25%;
-    width: 150vw;
-    height: 150vh;
+    top: -30%;
+    left: -30%;
+    width: 160vw;
+    height: 160vh;
     background:
         radial-gradient(circle at 15% 25%, rgba(56, 189, 248, var(--aurora-opacity)), transparent 45%),
         radial-gradient(circle at 85% 75%, rgba(168, 85, 247, var(--aurora-opacity)), transparent 45%),
@@ -127,7 +127,41 @@ body::before {
 }
 
 body::after {
-    content: "";
+    pointer-events: none;
+    opacity: var(--aurora-opacity);
+    will-change: transform;
+    transform: translateZ(0);
+    transition: opacity 0.5s ease;
+}
+
+.aurora-1 {
+    width: 650px;
+    height: 650px;
+    background: var(--aurora-1);
+    top: -15%;
+    left: -10%;
+    animation: auroraDance 30s ease-in-out infinite alternate;
+}
+
+.aurora-2 {
+    width: 550px;
+    height: 550px;
+    background: var(--aurora-2);
+    bottom: -15%;
+    right: -10%;
+    animation: auroraDance 35s ease-in-out infinite alternate-reverse;
+}
+
+.aurora-3 {
+    width: 450px;
+    height: 450px;
+    background: var(--aurora-3);
+    top: 35%;
+    left: 45%;
+    animation: auroraDance 25s ease-in-out infinite alternate;
+}
+
+.cyber-grid-overlay {
     position: fixed;
     inset: 0;
     background-image: 
@@ -137,7 +171,6 @@ body::after {
     background-size: 60px 60px, 40px 40px, 40px 40px;
     z-index: -1;
     pointer-events: none;
-    animation: gridMotion 40s linear infinite;
 }
 
 @keyframes auroraDance {
@@ -161,6 +194,10 @@ body::after {
     min-height: 100vh;
 }
 
+/* ==========================================================================
+   SIDEBAR NAVIGATION
+   ========================================================================== */
+
 .sidebar {
     width: 260px;
     background: var(--sidebar-bg);
@@ -173,7 +210,11 @@ body::after {
 }
 
 .logo {
-    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding-left: 6px;
 }
 
 .logo h2 {
@@ -719,6 +760,7 @@ body::after {
     border-radius: 12px;
     color: var(--input-color);
     font-size: 15px;
+    font-weight: 600;
     outline: none;
     backdrop-filter: blur(12px);
     transition: all 0.3s ease;

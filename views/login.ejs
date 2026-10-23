@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>ERP Portal Authentication</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,6 +84,7 @@
                     <h1>Welcome Back</h1>
                     <p id="subheading"><i class="fas fa-shield-alt" style="color: #3A0F34;"></i> Secure Administrator Portal</p>
                 </div>
+            </div>
 
                 <!-- Role Selector Tabs -->
                 <div class="role-switcher">
@@ -255,7 +256,7 @@
                 btnAdmin.classList.add('active');
                 btnStudent.classList.remove('active');
                 identifierLabel.innerText = "Administrator Username";
-                identifierInput.placeholder = "Enter admin username (e.g. admin)";
+                identifierInput.placeholder = "Enter admin username";
                 identifierIcon.className = "fas fa-user-shield lead-icon";
                 btnSubmit.querySelector('span').innerText = "Sign In to Admin Portal";
                 subheading.innerHTML = '<i class="fas fa-shield-alt" style="color: #3A0F34;"></i> Secure Administrator Portal';
@@ -266,8 +267,8 @@
             } else {
                 btnStudent.classList.add('active');
                 btnAdmin.classList.remove('active');
-                identifierLabel.innerText = "Student Roll Number / Username";
-                identifierInput.placeholder = "Enter 'student' or roll number (e.g. CS-101)";
+                identifierLabel.innerText = "Student Roll Number / ID";
+                identifierInput.placeholder = "Enter Roll Number or Student ID";
                 identifierIcon.className = "fas fa-id-card lead-icon";
                 btnSubmit.querySelector('span').innerText = "Sign In to Student Portal";
                 subheading.innerHTML = '<i class="fas fa-user-graduate" style="color: #3A0F34;"></i> Read-Only Student Portal';

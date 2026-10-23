@@ -25,9 +25,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Attach session user to all template views
+// Attach session user & flash messages to all template views
 app.use((req, res, next) => {
+    req.flash = (type, message) => {
+        if (!req.session) return;
+        req.session.flash = { type, message };
+    };
+
     res.locals.user = req.session ? req.session.user : null;
+    res.locals.flash = (req.session && req.session.flash) ? req.session.flash : null;
+    if (req.session) {
+        delete req.session.flash;
+    }
     next();
 });
 
@@ -81,9 +90,10 @@ app.post("/login", async (req, res) => {
         let studentRow = null;
 
         if (identifier) {
+            const parsedId = parseInt(identifier, 10);
             studentRow = await db.getAsync(
-                "SELECT * FROM students WHERE LOWER(TRIM(roll)) = LOWER(TRIM(?)) OR LOWER(TRIM(name)) = LOWER(TRIM(?))",
-                [identifier, identifier]
+                "SELECT * FROM students WHERE id = ? OR LOWER(TRIM(roll)) = LOWER(TRIM(?)) OR LOWER(TRIM(name)) = LOWER(TRIM(?))",
+                [isNaN(parsedId) ? -1 : parsedId, identifier, identifier]
             );
         }
 
@@ -92,14 +102,23 @@ app.post("/login", async (req, res) => {
             studentRow = await db.getAsync("SELECT * FROM students ORDER BY id ASC LIMIT 1");
         }
 
-        // If no student exists in DB, seed Alex Morgan
+        if (!studentRow) {
+            return res.send(`
+                <script>
+                    alert("No student account found matching '${identifier}'. Please check the Student ID or Roll Number.");
+                    window.location.href = "/";
+                </script>
+            `);
+        }
+
+        // If no student exists in DB, seed Alex Morgan safely
         if (!studentRow) {
             const result = await db.runAsync(
                 "INSERT INTO students (name, roll, branch, semester, phone, password) VALUES (?, ?, ?, ?, ?, ?)",
                 ["Alex Morgan", "CS-101", "Computer Science", "6th", "+1 9876543210", "student123"]
             );
-            studentRow = {
-                id: result.lastID,
+            studentRow = await db.getAsync("SELECT * FROM students WHERE roll = 'CS-101'") || {
+                id: result ? result.lastID : 1,
                 name: "Alex Morgan",
                 roll: "CS-101",
                 branch: "Computer Science",
@@ -203,7 +222,7 @@ app.get("/dashboard", requireAuth, async (req, res) => {
 app.get("/marks", requireAuth, async (req, res) => {
     try {
         const user = req.session.user;
-        const students = await db.allAsync("SELECT * FROM students");
+        const students = await db.allAsync("SELECT * FROM students ORDER BY name ASC");
 
         let marksSql = `
             SELECT marks.id, marks.total, students.name, students.id AS student_id
@@ -216,6 +235,8 @@ app.get("/marks", requireAuth, async (req, res) => {
             marksSql += ` WHERE marks.student_id = ?`;
             params = [user.id];
         }
+
+        marksSql += ` ORDER BY marks.id DESC`;
 
         const marks = await db.allAsync(marksSql, params);
         res.render("marks", { user: req.session.user, students, marks });
@@ -248,7 +269,8 @@ app.get("/marks/delete/:id", requireAuth, requireAdmin, async (req, res) => {
         res.redirect("/marks");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Server Error");
+        req.flash('danger', 'Failed to delete score record.');
+        res.redirect("/marks");
     }
 });
 

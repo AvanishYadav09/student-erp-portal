@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Mark Attendance - ERP Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +37,13 @@
             <!-- Top Bar -->
             <div class="topbar">
                 <div class="header-left">
-                    <h1>Attendance Marking</h1>
-                    <p>Mark daily class attendance for all enrolled students</p>
+                    <button type="button" class="mobile-menu-toggle" aria-label="Open Navigation Menu" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1>Attendance Marking</h1>
+                        <p>Mark daily class attendance for all enrolled students</p>
+                    </div>
                 </div>
 
                 <div class="header-right">
@@ -64,6 +69,9 @@
                 </div>
             </div>
 
+            <!-- Flash Notification Banner -->
+            <%- include('partials/flash') %>
+
             <!-- Attendance Marking Form Glass Card -->
             <div class="glass-card">
                 <form action="/attendance/save" method="POST">
@@ -75,7 +83,7 @@
                         </div>
                     </div>
 
-                    <div class="table-container" style="margin-bottom: 25px;">
+                    <div class="table-container table-responsive-wrapper" style="margin-bottom: 25px;">
                         <table class="glass-table">
                             <thead>
                                 <tr>
@@ -88,6 +96,11 @@
                             <tbody>
                                 <% if (students && students.length) { %>
                                     <% students.forEach(student => { %>
+                                        <% 
+                                            const currentStatus = (typeof attendanceMap !== 'undefined' && attendanceMap[student.id]) 
+                                                ? attendanceMap[student.id] 
+                                                : 'Present';
+                                        %>
                                         <tr>
                                             <td style="color: #0ea5e9; font-weight: bold;">#<%= student.id %></td>
                                             <td>
@@ -104,12 +117,12 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <div class="radio-toggle" style="justify-content: center;">
-                                                    <label style="background: rgba(0, 230, 118, .1); border-color: rgba(0, 230, 118, .3); color: #00e676;">
-                                                        <input type="radio" name="status[<%= student.id %>]" value="Present" required checked>
+                                                    <label style="background: rgba(0, 230, 118, .1); border-color: rgba(0, 230, 118, .3); color: #00e676; cursor: pointer;">
+                                                        <input type="radio" class="status-radio-present" name="status[<%= student.id %>]" value="Present" required <%= currentStatus === 'Present' ? 'checked' : '' %>>
                                                         <i class="fas fa-check"></i> Present
                                                     </label>
-                                                    <label style="background: rgba(255, 82, 82, .1); border-color: rgba(255, 82, 82, .3); color: #ff5252;">
-                                                        <input type="radio" name="status[<%= student.id %>]" value="Absent">
+                                                    <label style="background: rgba(255, 82, 82, .1); border-color: rgba(255, 82, 82, .3); color: #ff5252; cursor: pointer;">
+                                                        <input type="radio" class="status-radio-absent" name="status[<%= student.id %>]" value="Absent" <%= currentStatus === 'Absent' ? 'checked' : '' %>>
                                                         <i class="fas fa-times"></i> Absent
                                                     </label>
                                                 </div>
@@ -141,6 +154,16 @@
                     </div>
                 </form>
             </div>
+
+            <script>
+                function markAll(status) {
+                    if (status === 'Present') {
+                        document.querySelectorAll('.status-radio-present').forEach(r => r.checked = true);
+                    } else if (status === 'Absent') {
+                        document.querySelectorAll('.status-radio-absent').forEach(r => r.checked = true);
+                    }
+                }
+            </script>
 
         </main>
     </div>

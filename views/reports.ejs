@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Attendance Reports - ERP Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +37,13 @@
             <!-- Top Bar -->
             <div class="topbar">
                 <div class="header-left">
-                    <h1>Attendance Reports & Analytics</h1>
-                    <p>Detailed historical logs of student attendance records</p>
+                    <button type="button" class="mobile-menu-toggle" aria-label="Open Navigation Menu" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1>Attendance Reports & Analytics</h1>
+                        <p>Detailed historical logs of student attendance records</p>
+                    </div>
                 </div>
 
                 <div class="header-right">
@@ -68,6 +73,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Flash Notification Banner -->
+            <%- include('partials/flash') %>
 
             <!-- Stats Overview Cards -->
             <div class="cards">
@@ -100,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="table-container">
+                <div class="table-container table-responsive-wrapper">
                     <table class="glass-table" id="reportsTable">
                         <thead>
                             <tr>
