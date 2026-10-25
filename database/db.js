@@ -64,9 +64,15 @@ db.serialize(() => {
     `);
 
     // Ensure subject column exists in marks table if upgrading from legacy schema
-    db.run("ALTER TABLE marks ADD COLUMN subject TEXT DEFAULT 'General Performance'", (err) => {});
-    db.run("ALTER TABLE marks ADD COLUMN internal_marks INTEGER DEFAULT 25", (err) => {});
-    db.run("ALTER TABLE marks ADD COLUMN external_marks INTEGER DEFAULT 60", (err) => {});
+    db.run("ALTER TABLE marks ADD COLUMN subject TEXT DEFAULT 'General Performance'", (err) => {
+        db.run("UPDATE marks SET subject = 'General Performance' WHERE subject IS NULL OR subject = ''", () => {});
+    });
+    db.run("ALTER TABLE marks ADD COLUMN internal_marks INTEGER DEFAULT 25", (err) => {
+        db.run("UPDATE marks SET internal_marks = 25 WHERE internal_marks IS NULL", () => {});
+    });
+    db.run("ALTER TABLE marks ADD COLUMN external_marks INTEGER DEFAULT 60", (err) => {
+        db.run("UPDATE marks SET external_marks = 60 WHERE external_marks IS NULL", () => {});
+    });
 
     db.run(`
         CREATE TABLE IF NOT EXISTS admins (

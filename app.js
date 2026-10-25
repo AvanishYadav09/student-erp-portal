@@ -97,33 +97,19 @@ app.post("/login", async (req, res) => {
             );
         }
 
-        // Fallback to first student if identifier is generic
-        if (!studentRow) {
-            studentRow = await db.getAsync("SELECT * FROM students ORDER BY id ASC LIMIT 1");
+        // Fallback to first student if identifier is generic demo keyword 'student'
+        if (!studentRow && (identifier.toLowerCase() === 'student' || identifier.toLowerCase() === 'demo')) {
+            studentRow = await db.getAsync("SELECT * FROM students WHERE LOWER(TRIM(name)) = 'student' OR LOWER(TRIM(roll)) = 'cs-101' LIMIT 1") 
+                || await db.getAsync("SELECT * FROM students ORDER BY id ASC LIMIT 1");
         }
 
         if (!studentRow) {
             return res.send(`
                 <script>
-                    alert("No student account found matching '${identifier}'. Please check the Student ID or Roll Number.");
+                    alert("No student account found matching '${identifier.replace(/'/g, "\\'")}'. Please check the Student ID or Roll Number.");
                     window.location.href = "/";
                 </script>
             `);
-        }
-
-        // If no student exists in DB, seed Alex Morgan safely
-        if (!studentRow) {
-            const result = await db.runAsync(
-                "INSERT INTO students (name, roll, branch, semester, phone, password) VALUES (?, ?, ?, ?, ?, ?)",
-                ["Alex Morgan", "CS-101", "Computer Science", "6th", "+1 9876543210", "student123"]
-            );
-            studentRow = await db.getAsync("SELECT * FROM students WHERE roll = 'CS-101'") || {
-                id: result ? result.lastID : 1,
-                name: "Alex Morgan",
-                roll: "CS-101",
-                branch: "Computer Science",
-                password: "student123"
-            };
         }
 
         // Password verification for student
@@ -225,7 +211,8 @@ app.get("/marks", requireAuth, async (req, res) => {
         const students = await db.allAsync("SELECT * FROM students ORDER BY name ASC");
 
         let marksSql = `
-            SELECT marks.id, marks.total, students.name, students.id AS student_id
+            SELECT marks.id, marks.subject, marks.internal_marks, marks.external_marks, marks.total, 
+                   students.name, students.roll, students.branch, students.id AS student_id
             FROM marks
             JOIN students ON marks.student_id = students.id
         `;
@@ -248,17 +235,34 @@ app.get("/marks", requireAuth, async (req, res) => {
 
 app.post("/marks/add", requireAuth, requireAdmin, async (req, res) => {
     try {
-        const { student_id, total } = req.body;
-        const existing = await db.getAsync("SELECT id FROM marks WHERE student_id = ?", [student_id]);
+        const { student_id, subject, internal_marks, external_marks, total } = req.body;
+        const parsedInternal = parseInt(internal_marks, 10) || 0;
+        const parsedExternal = parseInt(external_marks, 10) || 0;
+        const parsedTotal = total ? parseInt(total, 10) : (parsedInternal + parsedExternal);
+        const subj = (subject || 'General Performance').trim();
+
+        const existing = await db.getAsync(
+            "SELECT id FROM marks WHERE student_id = ? AND LOWER(TRIM(subject)) = LOWER(TRIM(?))", 
+            [student_id, subj]
+        );
         if (existing) {
-            await db.runAsync("UPDATE marks SET total = ? WHERE student_id = ?", [total, student_id]);
+            await db.runAsync(
+                "UPDATE marks SET total = ?, internal_marks = ?, external_marks = ? WHERE id = ?", 
+                [parsedTotal, parsedInternal, parsedExternal, existing.id]
+            );
+            req.flash('success', `Updated marks for ${subj} (${parsedTotal}%).`);
         } else {
-            await db.runAsync("INSERT INTO marks(student_id, total) VALUES(?,?)", [student_id, total]);
+            await db.runAsync(
+                "INSERT INTO marks(student_id, subject, internal_marks, external_marks, total) VALUES(?, ?, ?, ?, ?)", 
+                [student_id, subj, parsedInternal, parsedExternal, parsedTotal]
+            );
+            req.flash('success', `Successfully assigned marks for ${subj} (${parsedTotal}%).`);
         }
         res.redirect("/marks");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Server Error");
+        req.flash('danger', 'Failed to assign marks: ' + err.message);
+        res.redirect("/marks");
     }
 });
 
@@ -266,6 +270,7 @@ app.get("/marks/delete/:id", requireAuth, requireAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         await db.runAsync("DELETE FROM marks WHERE id = ?", [id]);
+        req.flash('success', 'Score record deleted successfully.');
         res.redirect("/marks");
     } catch (err) {
         console.error(err);

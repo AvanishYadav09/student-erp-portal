@@ -23,6 +23,17 @@
                 updateToggleButtons(newTheme);
             });
         });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtns = document.querySelectorAll('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        mobileMenuBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (sidebar) {
+                    sidebar.classList.toggle('mobile-open');
+                }
+            });
+        });
     });
 
     function updateToggleButtons(theme) {

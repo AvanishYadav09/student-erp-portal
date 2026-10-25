@@ -77,9 +77,21 @@
                 <form action="/attendance/save" method="POST">
                     <div class="glass-card-header">
                         <h3><i class="fas fa-calendar-check" style="color: #0ea5e9;"></i> Daily Attendance Register</h3>
-                        <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
-                            <label><i class="fas fa-calendar-day"></i> Select Date:</label>
-                            <input type="date" name="date" class="glass-input" style="width: auto;" required value="<%= new Date().toISOString().split('T')[0] %>">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                                <label><i class="fas fa-calendar-day"></i> Select Date:</label>
+                                <input type="date" name="date" class="glass-input" style="width: auto; padding: 8px 14px;" required value="<%= typeof selectedDate !== 'undefined' ? selectedDate : new Date().toISOString().split('T')[0] %>" onchange="window.location.href='/attendance?date=' + this.value">
+                            </div>
+                            <% if (locals.user && locals.user.role === 'admin') { %>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" onclick="markAll('Present')" class="btn-glow btn-success-glow btn-sm" title="Mark All Present">
+                                        <i class="fas fa-check-double"></i> All Present
+                                    </button>
+                                    <button type="button" onclick="markAll('Absent')" class="btn-glow btn-danger-glow btn-sm" title="Mark All Absent">
+                                        <i class="fas fa-times"></i> All Absent
+                                    </button>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
 
@@ -108,12 +120,12 @@
                                                     <div class="avatar" style="width: 32px; height: 32px; font-size: 13px;">
                                                         <%= student.name ? student.name.charAt(0).toUpperCase() : 'S' %>
                                                     </div>
-                                                    <b style="color: #fff;"><%= student.name %></b>
+                                                    <b style="color: var(--text-primary);"><%= student.name %></b>
                                                 </div>
                                             </td>
                                             <td>
                                                 <span class="pill-badge pill-branch"><%= student.branch %></span>
-                                                <small style="color: #9aa4c5; margin-left: 6px;"><%= student.roll %></small>
+                                                <small style="color: var(--text-muted); margin-left: 6px;"><%= student.roll %></small>
                                             </td>
                                             <td style="text-align: center;">
                                                 <div class="radio-toggle" style="justify-content: center;">
@@ -131,7 +143,7 @@
                                     <% }) %>
                                 <% } else { %>
                                     <tr>
-                                        <td colspan="4" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
                                             <i class="fas fa-user-slash" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
                                             No students found in system. Please add students first.
                                         </td>

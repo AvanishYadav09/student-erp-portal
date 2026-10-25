@@ -123,7 +123,7 @@
                                 <% reports.forEach(report => { %>
                                     <tr class="report-row" data-status="<%= report.status %>">
                                         <td>
-                                            <span style="color: #cbd5e1; font-weight: 500;">
+                                            <span style="color: var(--text-primary); font-weight: 500;">
                                                 <i class="far fa-calendar-alt" style="color: #0ea5e9; margin-right: 8px;"></i>
                                                 <%= report.date %>
                                             </span>
@@ -133,7 +133,7 @@
                                                 <div class="avatar" style="width: 32px; height: 32px; font-size: 13px;">
                                                     <%= report.name ? report.name.charAt(0).toUpperCase() : 'S' %>
                                                 </div>
-                                                <b style="color: #fff;"><%= report.name %></b>
+                                                <b style="color: var(--text-primary);"><%= report.name %></b>
                                             </div>
                                         </td>
                                         <td>
@@ -147,14 +147,14 @@
                                                 </span>
                                             <% } %>
                                         </td>
-                                        <td style="text-align: right; color: #5c688d; font-size: 13px;">
+                                        <td style="text-align: right; color: var(--text-muted); font-size: 13px;">
                                             <i class="fas fa-shield-alt" style="margin-right: 4px;"></i> Verified Record
                                         </td>
                                     </tr>
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="4" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
                                         <i class="fas fa-chart-line" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
                                         No attendance reports logged yet.
                                     </td>

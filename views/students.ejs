@@ -102,7 +102,7 @@
             <div class="glass-card">
                 <div class="glass-card-header">
                     <h3><i class="fas fa-user-plus" style="color: #0ea5e9;"></i> Register New Student</h3>
-                    <span style="color: #9aa4c5; font-size: 13px;">Fill in student details below</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">Fill in student details below</span>
                 </div>
 
                 <form action="/students/add" method="POST">
@@ -178,10 +178,10 @@
                                                 <b><%= student.name %></b>
                                             </div>
                                         </td>
-                                        <td><span style="font-family: monospace; color: #cbd5e1;"><%= student.roll %></span></td>
+                                        <td><span style="font-family: monospace; color: var(--text-secondary);"><%= student.roll %></span></td>
                                         <td><span class="pill-badge pill-branch"><i class="fas fa-code-branch"></i> <%= student.branch %></span></td>
-                                        <td><span style="color: #9aa4c5;"><%= student.semester %></span></td>
-                                        <td><span style="color: #9aa4c5;"><i class="fas fa-phone-alt" style="font-size: 12px; margin-right: 5px;"></i> <%= student.phone %></span></td>
+                                        <td><span style="color: var(--text-muted);"><%= student.semester %></span></td>
+                                        <td><span style="color: var(--text-muted);"><i class="fas fa-phone-alt" style="font-size: 12px; margin-right: 5px;"></i> <%= student.phone %></span></td>
                                         <td style="text-align: right;">
                                             <% if (locals.user && locals.user.role === 'admin') { %>
                                                 <a href="/students/edit/<%= student.id %>" class="btn-glow btn-secondary-glow btn-sm" style="margin-right: 6px;">
@@ -198,7 +198,7 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="7" style="text-align: center; color: #9aa4c5; padding: 30px;">
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
                                         <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px; display: block; color: #5c688d;"></i>
                                         No student records found in the system.
                                     </td>
